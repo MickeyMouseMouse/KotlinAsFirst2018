@@ -66,6 +66,7 @@ class Tests {
     fun angleInRadian() {
         assertEquals(0.63256, angleInRadian(36, 14, 35), 1e-5)
         assertEquals(PI / 2.0, angleInRadian(90, 0, 0), 1e-5)
+        assertEquals(1.56388, angleInRadian(89, 36, 15), 1e-5)
     }
 
     @Test
