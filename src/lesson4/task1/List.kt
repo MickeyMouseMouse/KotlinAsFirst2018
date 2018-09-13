@@ -3,7 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import kotlin.math.sqrt
+import java.lang.Math.*
 
 /**
  * Пример
@@ -237,7 +237,7 @@ fun accumulate(list: MutableList<Double>): MutableList<Double>
 {
     if (list.isEmpty()) return list
 
-    var sum = 1.0
+    var sum = list[0]
 
     for (i in 1 until list.size)
     {
@@ -318,7 +318,7 @@ fun convert(n: Int, base: Int): List<Int>
     val list = mutableListOf<Int>()
     var cpy = n
 
-    while (cpy > base)
+    while (cpy >= base)
     {
         list.add(0,cpy % base)
         cpy /= base
@@ -342,7 +342,7 @@ fun convertToString(n: Int, base: Int): String
     var number : Char
     var cpy = n
 
-    while (cpy > base)
+    while (cpy >= base)
     {
         val tmp = cpy % base
         if (tmp >= 10)
@@ -379,7 +379,7 @@ fun decimal(digits: List<Int>, base: Int): Int
     var result = 0
 
     for (i in 0 until digits.size)
-        result += (digits[i] * java.lang.Math.pow(base.toDouble(), (digits.size - i - 1).toDouble())).toInt()
+        result += (digits[i] * pow(base.toDouble(), (digits.size - i - 1).toDouble())).toInt()
 
     return result
 }
@@ -400,9 +400,9 @@ fun decimalFromString(str: String, base: Int): Int
     for (i in 0 until str.length)
     {
         if (str[i].toInt() in '0'.toInt()..'9'.toInt())
-            result += (str[i].toInt() - '0'.toInt()) * java.lang.Math.pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
+            result += (str[i].toInt() - '0'.toInt()) * pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
         else
-            result += (str[i].toInt() - 'a'.toInt() + 10) * java.lang.Math.pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
+            result += (str[i].toInt() - 'a'.toInt() + 10) * pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
     }
 
     return result

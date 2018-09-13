@@ -2,6 +2,7 @@
 package lesson2.task2
 
 import lesson1.task1.sqr
+import java.lang.Math.*
 
 /**
  * Пример
@@ -26,14 +27,7 @@ fun isNumberHappy(number: Int) = (number / 1000) + (number / 100 % 10) == ((numb
  * Определить, угрожают ли они друг другу. Вернуть true, если угрожают.
  * Считать, что ферзи не могут загораживать друг друга.
  */
-fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean
-{
-    return if (x1 == x2 || y1 == y2 || java.lang.Math.abs(x1 - x2) == java.lang.Math.abs(y1 - y2))
-        true
-    else
-        false
-}
-
+fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int) = (x1 == x2 || y1 == y2 || abs(x1 - x2) == abs(y1 - y2))
 
 /**
  * Простая
@@ -90,23 +84,9 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean
 {
-    if (a >= r)
-        if (b >= s || c >= s) return true
-
-    if (a >= s)
-        if (b >= r || c >= r) return true
-
-    if (b >= r)
-        if (a >= s || c >= s) return true
-
-    if (b >= s)
-        if (a >= r || c >= r) return true
-
-    if (c >= r)
-        if (a >= s || b >= s) return true
-
-    if (c >= s)
-        if (a >= r || b >= r) return true
+    if (a <= r && b <= s || a <= s && b <= r) return true
+    if (a <= r && c <= s || a <= s && c <= r) return true
+    if (b <= r && c <= s || b <= s && c <= r) return true
 
     return false
 }

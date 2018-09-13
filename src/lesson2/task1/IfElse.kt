@@ -2,8 +2,7 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
-import kotlin.math.max
-import kotlin.math.sqrt
+import java.lang.Math.*
 
 /**
  * Пример
@@ -151,7 +150,7 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
     var bishopBeats = false
 
     if (rookX == kingX || rookY == kingY) rookBeats = true
-    if (java.lang.Math.abs(bishopX - kingX) == java.lang.Math.abs(bishopY - kingY)) bishopBeats = true
+    if (abs(bishopX - kingX) == abs(bishopY - kingY)) bishopBeats = true
 
     if (rookBeats && bishopBeats) return 3
     if (rookBeats) return 1

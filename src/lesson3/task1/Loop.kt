@@ -1,8 +1,6 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson3.task1
-
-import kotlin.math.PI
-import kotlin.math.sqrt
+import java.lang.Math.*
 
 /**
  * Пример
@@ -71,7 +69,7 @@ fun digitNumber(n: Int): Int
 {
     if (n == 0) return 1
 
-    var cpy = n
+    var cpy = abs(n)
     var number = 0
 
     while (cpy > 0)
@@ -164,7 +162,7 @@ fun maxDivisor(n: Int): Int
  */
 fun isCoPrime(m: Int, n: Int): Boolean
 {
-    if (m % n == 0 || n % m == 0) return false
+    if ((m % n == 0 && n != 1) || (n % m == 0 && m != 1)) return false
 
     for (i in 2..m / 2)
         if (m % i == 0 && n % i == 0) return false
@@ -181,7 +179,7 @@ fun isCoPrime(m: Int, n: Int): Boolean
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean
 {
-    var tmp : Long = 1
+    var tmp : Long = 0
 
     while (tmp * tmp < m)
         tmp++
@@ -334,11 +332,11 @@ fun isPalindrome(n: Int): Boolean
     while (numberDigits > 1)
     {
         endDigit = cpy % 10
-        firstDigit = cpy / java.lang.Math.pow(10.0, (numberDigits - 1).toDouble()).toInt()
+        firstDigit = cpy / pow(10.0, (numberDigits - 1).toDouble()).toInt()
 
         if (endDigit != firstDigit) return false
 
-        cpy %= java.lang.Math.pow(10.0, (numberDigits - 1).toDouble()).toInt()
+        cpy %= pow(10.0, (numberDigits - 1).toDouble()).toInt()
         cpy /= 10
         numberDigits -= 2
     }
