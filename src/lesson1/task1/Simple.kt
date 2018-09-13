@@ -1,7 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson1.task1
 
-import kotlin.math.*
+import java.lang.Math.*
 
 /**
  * Пример
@@ -93,7 +93,7 @@ fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double) = sqrt((x2 - x1)
  */
 fun thirdDigit(number: Int) = number / 100 % 10
 
-/**
+/***
  * Простая
  *
  * Поезд вышел со станции отправления в h1 часов m1 минут (например в 9:25) и
@@ -112,10 +112,7 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double
-{
-    return initial.toDouble() * java.lang.Math.pow(1 + percent.toDouble() / 100, 3.0)
-}
+fun accountInThreeYears(initial: Int, percent: Int) = initial.toDouble() * pow(1 + percent.toDouble() / 100, 3.0)
 
 /**
  * Простая
