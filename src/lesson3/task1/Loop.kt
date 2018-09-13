@@ -243,7 +243,7 @@ fun sin(x: Double, eps: Double): Double
     var sign = 1.0
     var tmp = 2.0
 
-    while (numerator / denominator >= eps)
+    while (abs(numerator / denominator) >= eps)
     {
         result += sign * numerator / denominator
 
@@ -272,7 +272,7 @@ fun cos(x: Double, eps: Double): Double
     var sign = -1.0
     var tmp = 3.0
 
-    while (numerator / denominator >= eps)
+    while (abs(numerator / denominator) >= eps)
     {
         result += sign * numerator / denominator
 
