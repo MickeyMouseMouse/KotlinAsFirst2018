@@ -5,7 +5,7 @@ import lesson1.task1.discriminant
 import kotlin.math.max
 import kotlin.math.sqrt
 
-/***
+/**
  * Пример
  *
  * Найти число корней квадратного уравнения ax^2 + bx + c = 0
