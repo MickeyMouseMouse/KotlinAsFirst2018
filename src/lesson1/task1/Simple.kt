@@ -76,7 +76,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int) = (48 * sagenes + 
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
 fun angleInRadian(grad: Int, min: Int, sec: Int) =
-        (grad.toDouble() + min.toDouble() / 60 + sec.toDouble() / 3600) / 180 * PI
+    (grad.toDouble() + min.toDouble() / 60 + sec.toDouble() / 3600) / 180 * PI
 
 /**
  * Тривиальная
