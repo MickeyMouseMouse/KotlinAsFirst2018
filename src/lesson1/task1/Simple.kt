@@ -84,7 +84,8 @@ fun angleInRadian(grad: Int, min: Int, sec: Int) =
  * Найти длину отрезка, соединяющего точки на плоскости с координатами (x1, y1) и (x2, y2).
  * Например, расстояние между (3, 0) и (0, 4) равно 5
  */
-fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double) = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double) =
+        sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
 
 /**
  * Простая
@@ -112,7 +113,8 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int) = initial.toDouble() * pow(1 + percent.toDouble() / 100, 3.0)
+fun accountInThreeYears(initial: Int, percent: Int) =
+        initial.toDouble() * pow(1 + percent.toDouble() / 100, 3.0)
 
 /**
  * Простая
@@ -120,4 +122,5 @@ fun accountInThreeYears(initial: Int, percent: Int) = initial.toDouble() * pow(1
  * Пользователь задает целое трехзначное число (например, 478).
  * Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int) = (number % 10) * 100 + (number / 10 % 10) * 10 + (number / 100)
+fun numberRevert(number: Int) =
+        (number % 10) * 100 + (number / 10 % 10) * 10 + (number / 100)
