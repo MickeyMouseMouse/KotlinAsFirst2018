@@ -37,28 +37,20 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int) = (x1 == x2 || y1 == y2 |
  */
 fun daysInMonth(month: Int, year: Int): Int
 {
-    var yearType = false // false - обычый, true - високосный
+    var isLeap = false // false - обычый, true - високосный
 
-    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) yearType = true
+    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) isLeap = true
 
     if (month == 2)
-        if (yearType)
+        if (isLeap)
             return 29
         else
             return 28
 
     return when (month)
     {
-        1 -> 31
-        3 -> 31
-        4 -> 30
-        5 -> 31
-        6 -> 30
-        7 -> 31
-        8 -> 31
-        9 -> 30
-        10 -> 31
-        11 -> 30
+        1, 3, 5, 7, 8, 10 -> 31
+        4, 6, 9, 11 -> 30
         else -> 31
     }
 }
