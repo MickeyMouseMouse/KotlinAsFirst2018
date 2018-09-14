@@ -169,7 +169,7 @@ fun center(list: MutableList<Double>): MutableList<Double>
         sum += element
         number++
     }
-    sum = sum / number
+    sum /= number
 
     for (i in 0 until list.size)
     {
