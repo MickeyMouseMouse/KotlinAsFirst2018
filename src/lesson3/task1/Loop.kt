@@ -132,7 +132,7 @@ fun lcm(m: Int, n: Int): Int
  */
 fun minDivisor(n: Int): Int
 {
-    for (i in 2..(sqrt(n.toDouble()) + 1.0).toInt())
+    for (i in 2..(sqrt(n.toDouble())).toInt())
         if (n % i == 0) return i
 
     return n
@@ -163,7 +163,7 @@ fun isCoPrime(m: Int, n: Int): Boolean
 {
     if ((m % n == 0 && n != 1) || (n % m == 0 && m != 1)) return false
 
-    for (i in 2..m / 2)
+    for (i in 2..(sqrt(min(m, n).toDouble())).toInt())
         if (m % i == 0 && n % i == 0) return false
 
     return true
@@ -178,12 +178,16 @@ fun isCoPrime(m: Int, n: Int): Boolean
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean
 {
+    var square : Long = 0
     var tmp : Long = 0
 
-    while (tmp * tmp < m)
+    while (square < m)
+    {
         tmp++
+        square = tmp * tmp
+    }
 
-    return tmp * tmp <= n
+    return square <= n
 }
 
 /**
@@ -233,27 +237,29 @@ fun collatzSteps(x: Int): Int
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double
+fun countSinCos(x: Double, Eps: Double, Result: Double, Numerator: Double, Denominator: Double, Sign: Double, Tmp: Double): Double
 {
-    val newX = x % (2 * PI)
-    var numerator = newX
-    var denominator = 1.0
-    var result = 0.0
-    var sign = 1.0
-    var tmp = 2.0
+    var result = Result
+    var numerator = Numerator
+    var denominator = Denominator
+    var sign = Sign
+    var tmp = Tmp
 
-    while (abs(numerator / denominator) >= eps)
+    while (abs(numerator / denominator) >= Eps)
     {
         result += sign * numerator / denominator
 
         sign *= -1.0
-        numerator *= newX * newX
+        numerator *= x * x
         denominator *= tmp * (tmp + 1.0)
         tmp += 2.0
     }
 
     return result
 }
+
+fun sin(x: Double, eps: Double): Double =
+        countSinCos(x % (2 * PI), eps, 0.0,x % (2 * PI), 1.0, 1.0, 2.0)
 
 /**
  * Средняя
@@ -262,27 +268,8 @@ fun sin(x: Double, eps: Double): Double
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double
-{
-    val newX = x % (2 * PI)
-    var numerator = newX * newX
-    var denominator = 2.0
-    var result = 1.0
-    var sign = -1.0
-    var tmp = 3.0
-
-    while (abs(numerator / denominator) >= eps)
-    {
-        result += sign * numerator / denominator
-
-        sign *= -1.0
-        numerator *= newX * newX
-        denominator *= tmp * (tmp + 1.0)
-        tmp += 2.0
-    }
-
-    return result
-}
+fun cos(x: Double, eps: Double): Double =
+countSinCos(x % (2 * PI), eps, 1.0,(x % (2 * PI)) * (x % (2 * PI)), 2.0, -1.0, 3.0)
 
 /**
  * Средняя
