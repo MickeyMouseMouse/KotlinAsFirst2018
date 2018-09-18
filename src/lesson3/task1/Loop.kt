@@ -103,8 +103,8 @@ fun fib(n: Int): Int
  */
 fun lcm(m: Int, n: Int): Int
 {
-    var a : Int = m
-    var b : Int = n
+    var a = m
+    var b = n
     val nod : Int
 
     while (true)
@@ -184,7 +184,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean
     while (tmp * tmp < m)
         tmp++
 
-    return if (tmp * tmp <= n) true else false
+    return tmp * tmp <= n
 }
 
 /**
@@ -236,8 +236,8 @@ fun collatzSteps(x: Int): Int
  */
 fun sin(x: Double, eps: Double): Double
 {
-    val X = x % (2 * PI)
-    var numerator = X
+    val newX = x % (2 * PI)
+    var numerator = newX
     var denominator = 1.0
     var result = 0.0
     var sign = 1.0
@@ -248,7 +248,7 @@ fun sin(x: Double, eps: Double): Double
         result += sign * numerator / denominator
 
         sign *= -1.0
-        numerator *= X * X
+        numerator *= newX * newX
         denominator *= tmp * (tmp + 1.0)
         tmp += 2.0
     }
@@ -265,8 +265,8 @@ fun sin(x: Double, eps: Double): Double
  */
 fun cos(x: Double, eps: Double): Double
 {
-    val X = x % (2 * PI)
-    var numerator = X * X
+    val newX = x % (2 * PI)
+    var numerator = newX * newX
     var denominator = 2.0
     var result = 1.0
     var sign = -1.0
@@ -277,7 +277,7 @@ fun cos(x: Double, eps: Double): Double
         result += sign * numerator / denominator
 
         sign *= -1.0
-        numerator *= X * X
+        numerator *= newX * newX
         denominator *= tmp * (tmp + 1.0)
         tmp += 2.0
     }
