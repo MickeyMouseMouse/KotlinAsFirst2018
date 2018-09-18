@@ -67,16 +67,15 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int
 {
-    if (n == 0) return 1
-
     var cpy = abs(n)
     var number = 0
 
-    while (cpy > 0)
+    do
     {
         number++
         cpy /= 10
     }
+    while (cpy > 0)
 
     return number
 }
@@ -105,25 +104,25 @@ fun lcm(m: Int, n: Int): Int
 {
     var a = m
     var b = n
-    val nod : Int
+    val gcd : Int
 
     while (true)
     {
         a %= b
         if (a == 0)
         {
-            nod = b
+            gcd = b
             break
         }
         b %= a
         if (b == 0)
         {
-            nod = a
+            gcd = a
             break
         }
     }
 
-    return m / nod * n
+    return m / gcd * n
 }
 
 /**
