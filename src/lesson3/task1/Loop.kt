@@ -363,6 +363,20 @@ fun hasDifferentDigits(n: Int): Boolean
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
+fun countDigits(value: Int): Int
+{
+    var x = value
+    var result = 0
+
+    while (x > 0)
+    {
+        result++
+        x /= 10
+    }
+
+    return result
+}
+
 fun squareSequenceDigit(n: Int): Int
 {
     var count = 0
@@ -379,13 +393,7 @@ fun squareSequenceDigit(n: Int): Int
         number++
         squareNumber = number * number
 
-        var cpy = squareNumber
-        countDigitsInNumber = 0
-        while (cpy > 0)
-        {
-            countDigitsInNumber++
-            cpy /= 10
-        }
+        countDigitsInNumber = countDigits(squareNumber)
 
         count += countDigitsInNumber
         if (count >= n)
@@ -412,6 +420,7 @@ fun squareSequenceDigit(n: Int): Int
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
+
 fun fibSequenceDigit(n: Int): Int
 {
     var count = 0
@@ -426,13 +435,7 @@ fun fibSequenceDigit(n: Int): Int
 
     while (true)
     {
-        var cpy = number
-        countDigitsInNumber = 0
-        while (cpy > 0)
-        {
-            countDigitsInNumber++
-            cpy /= 10
-        }
+        countDigitsInNumber = countDigits(number)
 
         count += countDigitsInNumber
         if (count >= n)
