@@ -237,15 +237,17 @@ fun collatzSteps(x: Int): Int
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun countSinCos(x: Double, Eps: Double, Result: Double, Numerator: Double, Denominator: Double, Sign: Double, Tmp: Double): Double
+fun count(x: Double, eps: Double, result: Double, numerator: Double,
+          denominator: Double, sign: Double, tmp: Double): Double
 {
-    var result = Result
-    var numerator = Numerator
-    var denominator = Denominator
-    var sign = Sign
-    var tmp = Tmp
 
-    while (abs(numerator / denominator) >= Eps)
+    var result = result
+    var numerator = numerator
+    var denominator = denominator
+    var sign = sign
+    var tmp = tmp
+
+    while (abs(numerator / denominator) >= eps)
     {
         result += sign * numerator / denominator
 
@@ -258,8 +260,8 @@ fun countSinCos(x: Double, Eps: Double, Result: Double, Numerator: Double, Denom
     return result
 }
 
-fun sin(x: Double, eps: Double): Double =
-        countSinCos(x % (2 * PI), eps, 0.0,x % (2 * PI), 1.0, 1.0, 2.0)
+fun sin(x: Double, eps: Double) =
+count(x % (2 * PI), eps, 0.0,x % (2 * PI), 1.0, 1.0, 2.0)
 
 /**
  * Средняя
@@ -268,8 +270,8 @@ fun sin(x: Double, eps: Double): Double =
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double =
-countSinCos(x % (2 * PI), eps, 1.0,(x % (2 * PI)) * (x % (2 * PI)), 2.0, -1.0, 3.0)
+fun cos(x: Double, eps: Double) =
+count(x % (2 * PI), eps, 1.0,(x % (2 * PI)) * (x % (2 * PI)), 2.0, -1.0, 3.0)
 
 /**
  * Средняя
@@ -368,13 +370,31 @@ fun countDigits(value: Int): Int
     var x = value
     var result = 0
 
-    while (x > 0)
+    do
     {
         result++
         x /= 10
     }
+    while (x > 0)
 
     return result
+}
+
+fun countResult(countDigitsInNumber : Int, count : Int, n  : Int, squareNumber : Int) : Int
+{
+    val numberOfResultDigit : Int
+    var squareNumber = squareNumber
+    var countDigitsInNumber = countDigitsInNumber
+
+    numberOfResultDigit = countDigitsInNumber - (count - n)
+
+    while (numberOfResultDigit != countDigitsInNumber)
+    {
+        squareNumber /= 10
+        countDigitsInNumber--
+    }
+
+    return squareNumber % 10
 }
 
 fun squareSequenceDigit(n: Int): Int
@@ -386,8 +406,6 @@ fun squareSequenceDigit(n: Int): Int
 
     var countDigitsInNumber : Int
 
-    val numberOfResultDigit : Int
-
     while (true)
     {
         number++
@@ -397,17 +415,7 @@ fun squareSequenceDigit(n: Int): Int
 
         count += countDigitsInNumber
         if (count >= n)
-        {
-            numberOfResultDigit = countDigitsInNumber - (count - n)
-
-            while (numberOfResultDigit != countDigitsInNumber)
-            {
-                squareNumber /= 10
-                countDigitsInNumber--
-            }
-
-            return squareNumber % 10
-        }
+            return countResult(countDigitsInNumber, count, n, squareNumber)
     }
 }
 
@@ -431,31 +439,17 @@ fun fibSequenceDigit(n: Int): Int
 
     var countDigitsInNumber : Int
 
-    val numberOfResultDigit : Int
-
     while (true)
     {
         countDigitsInNumber = countDigits(number)
 
         count += countDigitsInNumber
         if (count >= n)
-        {
-            numberOfResultDigit = countDigitsInNumber - (count - n)
+            return countResult(countDigitsInNumber, count, n, number)
 
-            while (numberOfResultDigit != countDigitsInNumber)
-            {
-                number /= 10
-                countDigitsInNumber--
-            }
-
-            return number % 10
-        }
-        else
-        {
-            number = first + second
-            first = second
-            second = number
-        }
+        number = first + second
+        first = second
+        second = number
     }
 }
 
