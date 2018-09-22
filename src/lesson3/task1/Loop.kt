@@ -145,7 +145,7 @@ fun minDivisor(n: Int): Int
  */
 fun maxDivisor(n: Int): Int
 {
-    for (i in n / 2 downTo 2)
+    for (i in n / 2 downTo (sqrt(n.toDouble())).toInt())
         if (n % i == 0) return i
 
     return 1
