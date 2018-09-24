@@ -2,11 +2,6 @@
 package lesson3.task1
 import java.lang.Math.*
 
-fun main(args: Array<String>)
-{
-    print(round(1.6))
-}
-
 
 /**
  * Пример
@@ -151,9 +146,7 @@ fun minDivisor(n: Int): Int
  */
 fun maxDivisor(n: Int): Int
 {
-    if (isPrime(n)) return 1
-
-    for (i in n / 2 + 1 downTo 2)
+    for (i in n / 2 downTo 2)
         if (n % i == 0) return i
 
     return 1
