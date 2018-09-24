@@ -151,7 +151,7 @@ fun minDivisor(n: Int): Int
  */
 fun maxDivisor(n: Int): Int
 {
-    for (i in n / 2 downTo 2)
+    for (i in n / 2 + 1 downTo 2)
         if (n % i == 0) return i
 
     return 1
@@ -184,7 +184,7 @@ fun isCoPrime(m: Int, n: Int): Boolean
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean
 {
-    for (i in round(sqrt(m.toDouble()))..round(sqrt(n.toDouble())))
+    for (i in ceil(sqrt(m.toDouble())).toInt()..ceil(sqrt(n.toDouble())).toInt())
         if (i * i in m..n) return true
 
     return false
