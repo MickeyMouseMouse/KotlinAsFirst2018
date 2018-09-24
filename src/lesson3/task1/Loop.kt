@@ -2,6 +2,12 @@
 package lesson3.task1
 import java.lang.Math.*
 
+fun main(args: Array<String>)
+{
+    print(round(1.6))
+}
+
+
 /**
  * Пример
  *
@@ -145,7 +151,7 @@ fun minDivisor(n: Int): Int
  */
 fun maxDivisor(n: Int): Int
 {
-    for (i in n / 2 downTo (sqrt(n.toDouble())).toInt())
+    for (i in n / 2 downTo 2)
         if (n % i == 0) return i
 
     return 1
@@ -178,8 +184,8 @@ fun isCoPrime(m: Int, n: Int): Boolean
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean
 {
-    for (square in sqrt(m.toDouble()).toInt()..sqrt(n.toDouble()).toInt())
-        if (square * square in m..n) return true
+    for (i in round(sqrt(m.toDouble()))..round(sqrt(n.toDouble())))
+        if (i * i in m..n) return true
 
     return false
 }
