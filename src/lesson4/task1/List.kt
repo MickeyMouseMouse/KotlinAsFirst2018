@@ -161,23 +161,12 @@ fun center(list: MutableList<Double>): MutableList<Double>
 {
     if (list.isEmpty()) return list
 
-    var sum = 0.0
-    var number = 0
-
-    for (element in list)
-    {
-        sum += element
-        number++
-    }
-    sum /= number
+    val arithmeticMean = mean(list)
 
     for (i in 0 until list.size)
-    {
-        list[i] -= sum
-    }
+        list[i] -= arithmeticMean
 
     return list
-
 }
 
 /**
@@ -262,16 +251,13 @@ fun factorize(n: Int): List<Int>
     var cpyN = n
 
     while (i <= cpyN)
-    {
         if (cpyN % i == 0)
         {
             simpleMultipliers.add(i)
             cpyN /= i
-
         }
         else
             i++
-    }
 
     return simpleMultipliers
 }
@@ -285,7 +271,7 @@ fun factorize(n: Int): List<Int>
  */
 fun factorizeToString(n: Int): String
 {
-    var simpleMultipliers = ""
+    val simpleMultipliers = java.lang.StringBuilder("")
     var i = 2
     var cpyN = n
 
@@ -293,14 +279,14 @@ fun factorizeToString(n: Int): String
     {
         if (cpyN % i == 0)
         {
-            simpleMultipliers += "*$i"
+            simpleMultipliers.append("*$i")
             cpyN /= i
         }
         else
             i++
     }
 
-    return if (simpleMultipliers == "")
+    return if (simpleMultipliers.isEmpty())
         cpyN.toString()
     else
         simpleMultipliers.substring(1, simpleMultipliers.length)
@@ -315,7 +301,7 @@ fun factorizeToString(n: Int): String
  */
 fun convert(n: Int, base: Int): List<Int>
 {
-    val list = mutableListOf<Int>()
+    val list = ArrayList<Int>()
     var cpy = n
 
     while (cpy >= base)
@@ -338,20 +324,18 @@ fun convert(n: Int, base: Int): List<Int>
  */
 fun addNewSymbol(resultStr : String, x : Int) : String
 {
-    var resultStr = resultStr
+    val resultStr = java.lang.StringBuilder(resultStr)
     val number : Char
-    val code_a = 'a'.toInt()
 
     if (x >= 10)
     {
-        number = (code_a + x - 10).toChar()
-        resultStr = number.toString() + resultStr
+        number = ('a'.toInt() + x - 10).toChar()
+        resultStr.insert(0, number)
     }
     else
-        resultStr = x.toString() + resultStr
+        resultStr.insert(0, x)
 
-    return resultStr
-
+    return resultStr.toString()
 }
 
 fun convertToString(n: Int, base: Int): String
@@ -401,16 +385,13 @@ fun decimal(digits: List<Int>, base: Int): Int
 fun decimalFromString(str: String, base: Int): Int
 {
     var result = 0.0
-    val code_0 = '0'.toInt()
-    val code_9 = '9'.toInt()
-    val code_a = 'a'.toInt()
 
     for (i in 0 until str.length)
     {
-        result += if (str[i].toInt() in code_0..code_9)
-         (str[i].toInt() - code_0) * pow(base.toDouble(), (str.length - i - 1).toDouble())
+        result += if (str[i].toInt() in '0'.toInt()..'9'.toInt())
+         (str[i].toInt() - '0'.toInt()) * pow(base.toDouble(), (str.length - i - 1).toDouble())
         else
-         (str[i].toInt() - code_a + 10) * pow(base.toDouble(), (str.length - i - 1).toDouble())
+         (str[i].toInt() - 'a'.toInt() + 10) * pow(base.toDouble(), (str.length - i - 1).toDouble())
     }
 
     return result.toInt()
