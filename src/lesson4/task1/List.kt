@@ -336,33 +336,38 @@ fun convert(n: Int, base: Int): List<Int>
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
+fun addNewSymbol(resultStr : String, x : Int) : String
+{
+    var resultStr = resultStr
+    val number : Char
+    val code_a = 'a'.toInt()
+
+    if (x >= 10)
+    {
+        number = (code_a + x - 10).toChar()
+        resultStr = number.toString() + resultStr
+    }
+    else
+        resultStr = x.toString() + resultStr
+
+    return resultStr
+
+}
+
 fun convertToString(n: Int, base: Int): String
 {
     var resultStr = ""
-    var number : Char
     var cpy = n
+
 
     while (cpy >= base)
     {
-        val tmp = cpy % base
-        if (tmp >= 10)
-        {
-            number = ('a'.toInt() + tmp - 10).toChar()
-            resultStr = number.toString() + resultStr
-        }
-        else
-            resultStr = tmp.toString() + resultStr
+        resultStr = addNewSymbol(resultStr, cpy % base)
 
         cpy /= base
     }
 
-    if (cpy >= 10)
-    {
-        number = ('a'.toInt() + cpy - 10).toChar()
-        resultStr = number.toString() + resultStr
-    }
-    else
-        resultStr = cpy.toString() + resultStr
+    resultStr = addNewSymbol(resultStr, cpy)
 
     return resultStr
 }
@@ -376,12 +381,12 @@ fun convertToString(n: Int, base: Int): String
  */
 fun decimal(digits: List<Int>, base: Int): Int
 {
-    var result = 0
+    var result = 0.0
 
     for (i in 0 until digits.size)
-        result += (digits[i] * pow(base.toDouble(), (digits.size - i - 1).toDouble())).toInt()
+        result += (digits[i] * pow(base.toDouble(), (digits.size - i - 1).toDouble()))
 
-    return result
+    return result.toInt()
 }
 
 /**
@@ -395,17 +400,20 @@ fun decimal(digits: List<Int>, base: Int): Int
  */
 fun decimalFromString(str: String, base: Int): Int
 {
-    var result = 0
+    var result = 0.0
+    val code_0 = '0'.toInt()
+    val code_9 = '9'.toInt()
+    val code_a = 'a'.toInt()
 
     for (i in 0 until str.length)
     {
-        if (str[i].toInt() in '0'.toInt()..'9'.toInt())
-            result += (str[i].toInt() - '0'.toInt()) * pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
+        result += if (str[i].toInt() in code_0..code_9)
+         (str[i].toInt() - code_0) * pow(base.toDouble(), (str.length - i - 1).toDouble())
         else
-            result += (str[i].toInt() - 'a'.toInt() + 10) * pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
+         (str[i].toInt() - code_a + 10) * pow(base.toDouble(), (str.length - i - 1).toDouble())
     }
 
-    return result
+    return result.toInt()
 }
 
 /**
