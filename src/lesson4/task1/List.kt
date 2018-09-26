@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson3.task1.isCoPrime
 import java.lang.Math.*
 
 /**
@@ -257,7 +258,11 @@ fun factorize(n: Int): List<Int>
             cpyN /= i
         }
         else
+        {
             i++
+            while (!lesson3.task1.isPrime(i))
+                i++
+        }
 
     return simpleMultipliers
 }
