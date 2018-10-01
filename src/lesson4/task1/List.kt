@@ -135,8 +135,7 @@ fun abs(v: List<Double>): Double
  */
 fun mean(list: List<Double>): Double
 {
-    if (list.isEmpty())
-        return 0.0
+    if (list.isEmpty()) return 0.0
 
     var sum = 0.0
     var number = 0
@@ -252,7 +251,9 @@ fun factorize(n: Int): List<Int>
     var i = 2
     var cpyN = n
 
-    while (i <= cpyN)
+    if (lesson3.task1.isPrime(n)) return listOf(n)
+
+    while (i <= ceil(sqrt(n.toDouble())))
         if (cpyN % i == 0)
         {
             simpleMultipliers.add(i)
