@@ -253,7 +253,7 @@ fun factorize(n: Int): List<Int>
 
     if (lesson3.task1.isPrime(n)) return listOf(n)
 
-    while (i <= ceil(sqrt(n.toDouble())))
+    while (i <= cpyN.toDouble())
         if (cpyN % i == 0)
         {
             simpleMultipliers.add(i)
