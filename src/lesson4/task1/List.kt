@@ -276,25 +276,13 @@ fun factorize(n: Int): List<Int>
  */
 fun factorizeToString(n: Int): String
 {
-    val simpleMultipliers = java.lang.StringBuilder("")
-    var i = 2
-    var cpyN = n
+    val tmp = factorize(n)
+    val result = java.lang.StringBuilder(tmp[0].toString())
 
-    while (i <= n / 2)
-    {
-        if (cpyN % i == 0)
-        {
-            simpleMultipliers.append("*$i")
-            cpyN /= i
-        }
-        else
-            i++
-    }
+    for (i in 1 until tmp.size)
+        result.append("*${tmp[i]}")
 
-    return if (simpleMultipliers.isEmpty())
-        cpyN.toString()
-    else
-        simpleMultipliers.substring(1, simpleMultipliers.length)
+    return result.toString()
 }
 
 /**
