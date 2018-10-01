@@ -135,7 +135,8 @@ fun abs(v: List<Double>): Double
  */
 fun mean(list: List<Double>): Double
 {
-    if (list.isEmpty()) return 0.0
+    if (list.isEmpty())
+        return 0.0
 
     var sum = 0.0
     var number = 0
