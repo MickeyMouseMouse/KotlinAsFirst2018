@@ -3,7 +3,6 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import lesson3.task1.isCoPrime
 import java.lang.Math.*
 
 /**
@@ -249,15 +248,15 @@ fun factorize(n: Int): List<Int>
 {
     val simpleMultipliers = mutableListOf<Int>()
     var i = 2
-    var cpyN = n
+    var n = n
 
     if (lesson3.task1.isPrime(n)) return listOf(n)
 
-    while (i <= cpyN.toDouble())
-        if (cpyN % i == 0)
+    while (i <= n.toDouble())
+        if (n % i == 0)
         {
             simpleMultipliers.add(i)
-            cpyN /= i
+            n /= i
         }
         else
         {
@@ -276,16 +275,7 @@ fun factorize(n: Int): List<Int>
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String
-{
-    val tmp = factorize(n)
-    val result = java.lang.StringBuilder(tmp[0].toString())
-
-    for (i in 1 until tmp.size)
-        result.append("*${tmp[i]}")
-
-    return result.toString()
-}
+fun factorizeToString(n: Int) = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя
@@ -297,14 +287,14 @@ fun factorizeToString(n: Int): String
 fun convert(n: Int, base: Int): List<Int>
 {
     val list = ArrayList<Int>()
-    var cpy = n
+    var n = n
 
-    while (cpy >= base)
+    do
     {
-        list.add(0,cpy % base)
-        cpy /= base
+        list.add(0, n % base)
+        n /= base
     }
-    list.add(0, cpy)
+    while (n != 0)
 
     return list
 }
@@ -317,9 +307,9 @@ fun convert(n: Int, base: Int): List<Int>
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun addNewSymbol(resultStr : String, x : Int) : String
+fun addNewSymbol(resultStr : StringBuilder, x : Int)
 {
-    val resultStr = java.lang.StringBuilder(resultStr)
+    val resultStr = resultStr
     val number : Char
 
     if (x >= 10)
@@ -329,26 +319,24 @@ fun addNewSymbol(resultStr : String, x : Int) : String
     }
     else
         resultStr.insert(0, x)
-
-    return resultStr.toString()
 }
 
 fun convertToString(n: Int, base: Int): String
 {
-    var resultStr = ""
-    var cpy = n
+    val resultStr = StringBuilder("")
+    var n = n
 
 
-    while (cpy >= base)
+    while (n >= base)
     {
-        resultStr = addNewSymbol(resultStr, cpy % base)
+        addNewSymbol(resultStr, n % base)
 
-        cpy /= base
+        n /= base
     }
 
-    resultStr = addNewSymbol(resultStr, cpy)
+    addNewSymbol(resultStr, n)
 
-    return resultStr
+    return resultStr.toString()
 }
 
 /**
