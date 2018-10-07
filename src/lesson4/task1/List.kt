@@ -388,7 +388,59 @@ fun decimalFromString(str: String, base: Int): Int
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String
+{
+    val thousand = n / 1000
+    val hundreds = (n % 1000) / 100
+    val decades = (n % 100) / 10
+    val units = n % 10
+
+    val result = StringBuilder("")
+
+    for (i in 1..thousand)
+        result.append('M')
+
+    when (hundreds)
+    {
+        1, 2, 3 -> repeat(hundreds) {result.append('C')}
+        4 -> result.append("CD")
+        5 -> result.append("D")
+        6, 7, 8 ->
+        {
+            result.append("D")
+            repeat(hundreds - 5) {result.append("C")}
+        }
+        9 -> result.append("CM")
+    }
+
+    when (decades)
+    {
+        1, 2, 3 -> repeat(decades) {result.append('X')}
+        4 -> result.append("XL")
+        5 -> result.append("L")
+        6, 7, 8 ->
+        {
+            result.append("L")
+            repeat(decades - 5) {result.append("X")}
+        }
+        9 -> result.append("XC")
+    }
+
+    when (units)
+    {
+        1, 2, 3 -> repeat(units) {result.append('I')}
+        4 -> result.append("IV")
+        5 -> result.append("V")
+        6, 7, 8 ->
+        {
+            result.append("V")
+            repeat(units - 5) {result.append("I")}
+        }
+        9 -> result.append("IX")
+    }
+
+    return result.toString()
+}
 
 /**
  * Очень сложная
@@ -398,3 +450,27 @@ fun roman(n: Int): String = TODO()
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String = TODO()
+/*
+{
+    val a = listOf("один", "два" , "три", "четыре", "пять", "шесть", "семь",
+                   "восемь", "девять")
+
+    val b = listOf("одиннадцать", "двенадцать", "тринадцать", "цетырнадцать",
+                   "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать",
+                   "девятнадцать")
+
+    val c = listOf("десять", "двадцать", "тридцать", "сорок",
+            "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят",
+            "девяносто")
+
+    val d = listOf("сто", "двести", "тристо", "четыресто",
+            "пятьсот", "шестьсот", "семьсот", "восемьсот",
+            "девятьсот")
+
+    val e = listOf("тысяча", "тысячи", "тысяч")
+
+    val f = listOf("одна", "две")
+
+    val result = StringBuilder("")
+}
+*/
