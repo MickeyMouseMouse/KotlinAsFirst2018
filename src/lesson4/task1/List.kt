@@ -291,7 +291,7 @@ fun convert(n: Int, base: Int): List<Int>
 
     do
     {
-        list.add(0, n % base)
+        list.addAll(0, listOf(n % base))
         n /= base
     }
     while (n != 0)
