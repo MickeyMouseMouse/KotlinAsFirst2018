@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
 
 package lesson6.task1
+import lesson2.task2.daysInMonth
 
 /**
  * Пример
@@ -71,7 +72,55 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String
+{
+    val input = str.split(" ")
+
+    if (input.size != 3) return ""
+
+    try
+    {
+        val month = when (input[1])
+                        {
+                            "января" -> 1
+                            "февраля" -> 2
+                            "марта" -> 3
+                            "апреля" -> 4
+                            "мая" -> 5
+                            "июня" -> 6
+                            "июля" -> 7
+                            "августа" -> 8
+                            "сентября" -> 9
+                            "октября" -> 10
+                            "ноября" -> 11
+                            "декабря" -> 12
+                            else -> return ""
+                        }
+        val day = input[0].toInt()
+        val year = input[2].toInt()
+        when (month)
+        {
+            1 -> if (day !in 1..31) return ""
+            2 -> if (day !in 1..daysInMonth(2, year)) return ""
+            3 -> if (day !in 1..31) return ""
+            4 -> if (day !in 1..30) return ""
+            5 -> if (day !in 1..31) return ""
+            6 -> if (day !in 1..30) return ""
+            7 -> if (day !in 1..31) return ""
+            8 -> if (day !in 1..31) return ""
+            9 -> if (day !in 1..30) return ""
+            10 -> if (day !in 1..31) return ""
+            11 -> if (day !in 1..30) return ""
+            else -> if (day !in 1..31) return ""
+        }
+
+        return String.format("%02d.%02d.%04d", day, month, year)
+    }
+    catch (e: Exception)
+    {
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -83,7 +132,56 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String
+{
+    val input = digital.split(".")
+
+    if (input.size != 3) return ""
+
+    try
+    {
+        val month = when (input[1].toInt())
+        {
+            1 -> "января"
+            2 -> "февраля"
+            3 -> "марта"
+            4 -> "апреля"
+            5 -> "мая"
+            6 -> "июня"
+            7 -> "июля"
+            8 -> "августа"
+            9 -> "сентября"
+            10 -> "октября"
+            11 -> "ноября"
+            12 -> "декабря"
+            else -> return ""
+        }
+
+        val day = input[0].toInt()
+        val year = input[2].toInt()
+        when (input[1].toInt())
+        {
+            1 -> if (day !in 1..31) return ""
+            2 -> if (day !in 1..daysInMonth(2, year)) return ""
+            3 -> if (day !in 1..31) return ""
+            4 -> if (day !in 1..30) return ""
+            5 -> if (day !in 1..31) return ""
+            6 -> if (day !in 1..30) return ""
+            7 -> if (day !in 1..31) return ""
+            8 -> if (day !in 1..31) return ""
+            9 -> if (day !in 1..30) return ""
+            10 -> if (day !in 1..31) return ""
+            11 -> if (day !in 1..30) return ""
+            else -> if (day !in 1..31) return ""
+        }
+
+        return String.format("%d %s %04d", day, month, year)
+    }
+    catch (e: Exception)
+    {
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -97,7 +195,23 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String
+{
+    val permissibleSymbols =
+            setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                  ' ', '+', '-', '(', ')')
+    val result = StringBuilder("")
+
+    for (symbol in phone)
+    {
+        if (symbol !in permissibleSymbols) return ""
+
+        if (symbol != ' ' && symbol != '-' &&
+            symbol != '(' && symbol != ')') result.append(symbol)
+    }
+
+    return result.toString()
+}
 
 /**
  * Средняя
@@ -109,7 +223,26 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int
+{
+    val permissibleSymbols = setOf('%', '-')
+
+    val input = jumps.split(" ")
+
+    var max = -1
+    try
+    {
+        for (i in 0 until input.size)
+            if (input[i][0] !in permissibleSymbols)
+                if (input[i].toInt() > max) max = input[i].toInt()
+    }
+    catch (e: Exception)
+    {
+        return -1
+    }
+
+    return max
+}
 
 /**
  * Сложная
@@ -121,7 +254,53 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int
+{
+    val permissibleSymbols = setOf('0', '1', '2', '3', '4', '5', '6', '7',
+                                   '8', '9', ' ', '+', '%', '-')
+
+    for (i in 0 until jumps.length)
+        if (jumps[i] !in permissibleSymbols) return -1
+
+    // ищем индекс начала нужного числа (tmp)
+    var tmp = jumps.length - 1
+    while (tmp >= 0)
+    {
+        if (jumps[tmp] == '+')
+        {
+            while (jumps[tmp] != ' ')
+                tmp--
+            tmp--
+
+            while (jumps[tmp] != ' ' && tmp > 0)
+                tmp--
+
+            if (tmp != 0) tmp++
+
+            break
+        }
+
+        tmp--
+    }
+
+    var result = 0
+    try
+    {
+        while (jumps[tmp] != ' ')
+        {
+            result *= 10
+            result += jumps[tmp].toInt() - '0'.toInt()
+
+            tmp++
+        }
+    }
+    catch (e: Exception)
+    {
+        return -1
+    }
+
+    return result
+}
 
 /**
  * Сложная
@@ -130,9 +309,45 @@ fun bestHighJump(jumps: String): Int = TODO()
  * использующее целые положительные числа, плюсы и минусы, разделённые пробелами.
  * Наличие двух знаков подряд "13 + + 10" или двух чисел подряд "1 2" не допускается.
  * Вернуть значение выражения (6 для примера).
- * Про нарушении формата входной строки бросить исключение IllegalArgumentException
+ * При нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int
+{
+    val numbers = setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+    val signs = setOf('+', '-')
+
+    val input = expression.split(" ")
+
+    for (i in 0 until input.size)
+        if (i % 2 == 0)
+        {
+            for (j in 0 until input[i].length)
+                if (input[i][j] !in numbers) throw IllegalArgumentException("")
+        }
+        else
+        {
+            for (j in 0 until input[i].length)
+                if (input[i][j] !in signs) throw IllegalArgumentException("")
+        }
+
+    var result = 0
+    var sign = 1 // 1 = +; 0 = -
+    for (i in 0 until input.size step 2)
+    {
+        if (sign == 1)
+            result += input[i].toInt()
+        else
+            result -= input[i].toInt()
+
+        if (i != input.size - 1)
+            if (input[i + 1] == "+")
+                sign = 1
+            else
+                sign = 0
+    }
+
+    return result
+}
 
 /**
  * Сложная
@@ -143,7 +358,22 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int
+{
+    val input = str.split(" ")
+
+    var tmp = -1
+    for (i in 0 until input.size - 1)
+        if (input[i].toLowerCase() == input[i + 1].toLowerCase()) tmp = i
+
+    if (tmp == -1) return -1
+
+    var result = -1
+    for (i in 0 until tmp)
+        result += input[i].length + 1
+
+    return result + 1
+}
 
 /**
  * Сложная
@@ -156,7 +386,28 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String
+{
+    // создание строки без ;
+    val tmp = StringBuilder("")
+    for (i in 0 until description.length)
+        if (description[i] != ';') tmp.append(description[i])
+
+    val input = tmp.split(" ")
+
+
+    var max = 0.0
+    var result = ""
+    for (i in 1 until input.size step 2)
+        if (input[i].toDouble() > max)
+        {
+            max = input[i].toDouble()
+            result = input[i - 1]
+        }
+
+
+    return result
+}
 
 /**
  * Сложная
@@ -169,7 +420,95 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int
+{
+    val arabicNumbers = listOf(1, 5, 10, 50, 100, 500, 1000)
+    val arabicNumbersOther = listOf(4, 9, 40, 90, 400, 900)
+    val lengthRoman = roman.length
+
+    for (i in 0 until lengthRoman)
+        if (roman[i] !in setOf('I', 'V', 'X', 'L', 'C', 'D', 'M')) return -1
+
+    var result = 0
+    var tmp = 0 // индекс элемента строки
+    while (tmp < lengthRoman)
+    {
+        when (roman[tmp])
+        {
+            'I' -> if (tmp + 1 != lengthRoman)
+                    when (roman[tmp + 1])
+                    {
+                        'V' ->
+                        {
+                            result += arabicNumbersOther[0]
+                            tmp++
+                        }
+
+                        'X' ->
+                        {
+                            result += arabicNumbersOther[1]
+                            tmp++
+                        }
+
+                        else -> result += arabicNumbers[0]
+                    }
+                   else
+                    result += arabicNumbers[0]
+
+            'V' -> result += arabicNumbers[1]
+
+            'X' -> if (tmp + 1 != lengthRoman)
+                    when (roman[tmp + 1])
+                    {
+                        'L' ->
+                        {
+                            result += arabicNumbersOther[2]
+                            tmp++
+                        }
+
+                        'C' ->
+                        {
+                            result += arabicNumbersOther[3]
+                            tmp++
+                        }
+
+                        else -> result += arabicNumbers[2]
+                    }
+                   else
+                    result += arabicNumbers[2]
+
+            'L' -> result += arabicNumbers[3]
+
+            'C' -> if (tmp + 1 != lengthRoman)
+                    when(roman[tmp + 1])
+                    {
+                        'D' ->
+                        {
+                            result += arabicNumbersOther[4]
+                            tmp++
+                        }
+
+                        'M' ->
+                        {
+                            result += arabicNumbersOther[5]
+                            tmp++
+                        }
+
+                        else -> result += arabicNumbers[4]
+                    }
+                   else
+                    result += arabicNumbers[4]
+
+            'D' -> result += arabicNumbers[5]
+
+            'M' -> result += arabicNumbers[6]
+        }
+
+        tmp++
+    }
+
+    return result
+}
 
 /**
  * Очень сложная
