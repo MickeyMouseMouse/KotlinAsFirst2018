@@ -289,7 +289,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String>
     val result = mutableListOf<String>()
 
     for (nameA in a)
-        if (nameA in b) result.add(result.size, nameA)
+        if (nameA in b && nameA !in result) result.add(result.size, nameA)
 
     return result.toList()
 }
@@ -305,8 +305,11 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String>
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean
 {
+    for (i in 0 until chars.size)
+        chars[i].toLowerCase()
+
     for (i in 0 until word.length)
-        if (word[i] !in chars) return false
+        if (word[i].toLowerCase() !in chars) return false
 
     return true
 }

@@ -114,7 +114,7 @@ fun dateStrToDigit(str: String): String
             else -> if (day !in 1..31) return ""
         }
 
-        return String.format("%02d.%02d.%04d", day, month, year)
+        return String.format("%02d.%02d.%d", day, month, year)
     }
     catch (e: Exception)
     {
@@ -175,7 +175,7 @@ fun dateDigitToStr(digital: String): String
             else -> if (day !in 1..31) return ""
         }
 
-        return String.format("%d %s %04d", day, month, year)
+        return String.format("%d %s %d", day, month, year)
     }
     catch (e: Exception)
     {
@@ -225,15 +225,27 @@ fun flattenPhoneNumber(phone: String): String
  */
 fun bestLongJump(jumps: String): Int
 {
-    val permissibleSymbols = setOf('%', '-')
+    val tmp = StringBuilder("")
+    var index = 0
+    while (index < jumps.length)
+    {
+        tmp.append(jumps[index])
 
-    val input = jumps.split(" ")
+        if (jumps[index] == ' ')
+            while(jumps[index] == ' ')
+                index++
+        else
+            index++
+    }
+
+
+    val input = tmp.split(" ")
 
     var max = -1
     try
     {
         for (i in 0 until input.size)
-            if (input[i][0] !in permissibleSymbols)
+            if (input[i][0] !in setOf('%', '-'))
                 if (input[i].toInt() > max) max = input[i].toInt()
     }
     catch (e: Exception)
@@ -259,45 +271,52 @@ fun bestHighJump(jumps: String): Int
     val permissibleSymbols = setOf('0', '1', '2', '3', '4', '5', '6', '7',
                                    '8', '9', ' ', '+', '%', '-')
 
-    for (i in 0 until jumps.length)
+    val jumps = ' ' + jumps
+    val lengthJumps = jumps.length
+    for (i in 0 until lengthJumps)
         if (jumps[i] !in permissibleSymbols) return -1
 
-    // ищем индекс начала нужного числа (tmp)
-    var tmp = jumps.length - 1
-    while (tmp >= 0)
-    {
-        if (jumps[tmp] == '+')
-        {
-            while (jumps[tmp] != ' ')
-                tmp--
-            tmp--
-
-            while (jumps[tmp] != ' ' && tmp > 0)
-                tmp--
-
-            if (tmp != 0) tmp++
-
-            break
-        }
-
-        tmp--
-    }
-
+    var startNumber = 0
+    var endNumber = 0
     var result = 0
-    try
-    {
-        while (jumps[tmp] != ' ')
+    for (i in 1 until lengthJumps)
+        if (jumps[i] != '+')
         {
-            result *= 10
-            result += jumps[tmp].toInt() - '0'.toInt()
+            if ((jumps[i].toInt() - '0'.toInt() in 0..9) &&
+                (jumps[i - 1] == ' ') &&
+                (jumps[i + 1] == ' '))
+                {
+                    startNumber = i
+                    endNumber = i
+                    continue
+                }
 
-            tmp++
+            if ((jumps[i].toInt() - '0'.toInt() in 0..9) &&
+                (jumps[i - 1].toInt() - '0'.toInt() in 0..9) &&
+                (jumps[i + 1] == ' '))
+            {
+                endNumber = i
+                continue
+            }
+
+            if ((jumps[i].toInt() - '0'.toInt() in 0..9) &&
+                (jumps[i + 1].toInt() - '0'.toInt() in 0..9) &&
+                (jumps[i - 1] == ' ' && i - 1 >= 0))
+            {
+                startNumber = i
+                continue
+            }
         }
-    }
-    catch (e: Exception)
-    {
-        return -1
-    }
+        else
+        {
+            var number = 0
+            for (j in startNumber..endNumber)
+            {
+                number *= 10
+                number += jumps[j].toInt() - '0'.toInt()
+            }
+            if (number > result) result = number
+        }
 
     return result
 }
@@ -313,6 +332,8 @@ fun bestHighJump(jumps: String): Int
  */
 fun plusMinus(expression: String): Int
 {
+    if (expression == "") throw IllegalArgumentException("")
+
     val numbers = setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
     val signs = setOf('+', '-')
 
@@ -364,7 +385,11 @@ fun firstDuplicateIndex(str: String): Int
 
     var tmp = -1
     for (i in 0 until input.size - 1)
-        if (input[i].toLowerCase() == input[i + 1].toLowerCase()) tmp = i
+        if (input[i].toLowerCase() == input[i + 1].toLowerCase())
+        {
+            tmp = i
+            break
+        }
 
     if (tmp == -1) return -1
 
@@ -396,7 +421,7 @@ fun mostExpensive(description: String): String
     val input = tmp.split(" ")
 
 
-    var max = 0.0
+    var max = -1.0
     var result = ""
     for (i in 1 until input.size step 2)
         if (input[i].toDouble() > max)
@@ -426,6 +451,7 @@ fun fromRoman(roman: String): Int
     val arabicNumbersOther = listOf(4, 9, 40, 90, 400, 900)
     val lengthRoman = roman.length
 
+    if (roman.length == 0) return -1
     for (i in 0 until lengthRoman)
         if (roman[i] !in setOf('I', 'V', 'X', 'L', 'C', 'D', 'M')) return -1
 
