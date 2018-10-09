@@ -278,7 +278,7 @@ fun bestHighJump(jumps: String): Int
 
     var startNumber = 0
     var endNumber = 0
-    var result = 0
+    var result = -1
     for (i in 1 until lengthJumps)
         if (jumps[i] != '+')
         {
