@@ -134,6 +134,9 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>>
         else
             result[grade] = listOf(name)
 
+    for ((grade, names) in result)
+        result[grade] = result[grade]?.sortedDescending() ?: listOf()
+
     return result
 }
 
