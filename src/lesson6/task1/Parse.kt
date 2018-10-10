@@ -210,6 +210,8 @@ fun flattenPhoneNumber(phone: String): String
             symbol != '(' && symbol != ')') result.append(symbol)
     }
 
+    if (result.length == 1 && result[0] == '+') return ""
+
     return result.toString()
 }
 
