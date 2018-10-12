@@ -334,42 +334,42 @@ fun bestHighJump(jumps: String): Int
  */
 fun plusMinus(expression: String): Int
 {
-    if (expression == "") throw IllegalArgumentException("")
-
-    val numbers = setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
-    val signs = setOf('+', '-')
-
-    val input = expression.split(" ")
-
-    for (i in 0 until input.size)
-        if (i % 2 == 0)
-        {
-            for (j in 0 until input[i].length)
-                if (input[i][j] !in numbers) throw IllegalArgumentException("")
-        }
-        else
-        {
-            for (j in 0 until input[i].length)
-                if (input[i][j] !in signs) throw IllegalArgumentException("")
-        }
-
-    var result = 0
-    var sign = 1 // 1 = +; 0 = -
-    for (i in 0 until input.size step 2)
+    try
     {
-        if (sign == 1)
-            result += input[i].toInt()
-        else
-            result -= input[i].toInt()
+        val input = expression.split(" ")
 
-        if (i != input.size - 1)
-            if (input[i + 1] == "+")
-                sign = 1
+        for (i in 0 until input.size)
+            if (i % 2 == 0)
+            {
+                for (j in 0 until input[i].length)
+                    if (input[i][j].toInt() - '0'.toInt() !in 0..9) throw IllegalArgumentException("")
+            }
             else
-                sign = 0
-    }
+                if (input[i] != "+" && input[i] != "-") throw IllegalArgumentException("")
 
-    return result
+        var result = 0
+        var sign = 1 // 1 = +; 0 = -
+
+        for (i in 0 until input.size step 2)
+        {
+            if (sign == 1)
+                result += input[i].toInt()
+            else
+                result -= input[i].toInt()
+
+            if (i != input.size - 1)
+                if (input[i + 1] == "+")
+                    sign = 1
+                else
+                    sign = 0
+        }
+
+        return result
+    }
+    catch (e: Exception)
+    {
+        throw IllegalArgumentException("")
+    }
 }
 
 /**
