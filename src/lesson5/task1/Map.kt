@@ -170,11 +170,11 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double>
 {
-    val namesOfStocks = mutableListOf<String>()
+    val namesOfStocks = ArrayList<String>()
 
     for (element in 0 until stockPrices.size)
         if (stockPrices[element].first !in namesOfStocks)
-            namesOfStocks.add(namesOfStocks.size, stockPrices[element].first)
+            namesOfStocks.add(stockPrices[element].first)
 
     val result = mutableMapOf<String, Double>()
     for (element in 0 until namesOfStocks.size)
@@ -288,12 +288,12 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>)
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String>
 {
-    val result = mutableListOf<String>()
+    val result = ArrayList<String>()
 
     for (nameA in a)
-        if (nameA in b && nameA !in result) result.add(result.size, nameA)
+        if (nameA in b && nameA !in result) result.add(nameA)
 
-    return result.toList()
+    return result
 }
 
 /**
@@ -308,7 +308,8 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String>
 fun canBuildFrom(chars: List<Char>, word: String): Boolean
 {
     for (i in 0 until word.length)
-        if (word[i].toLowerCase() !in chars && word[i].toUpperCase() !in chars) return false
+        if (word[i].toLowerCase() !in chars && word[i].toUpperCase() !in chars)
+            return false
 
     return true
 }
@@ -329,13 +330,16 @@ fun extractRepeats(list: List<String>): Map<String, Int>
 {
     val result = mutableMapOf<String, Int>()
 
-    for (i in 0 until list.size - 1)
+    val size = list.size
+    for (i in 0 until size - 1)
     {
+        if (list[i] in result) continue
+
         var numberOfRepeats = 1
-        for (j in i + 1 until list.size)
+        for (j in i + 1 until size)
             if (list[i] == list[j]) numberOfRepeats++
 
-        if (numberOfRepeats > 1 && list[i] !in result)
+        if (numberOfRepeats > 1)
             result[list[i]] = numberOfRepeats
     }
 
@@ -353,21 +357,22 @@ fun extractRepeats(list: List<String>): Map<String, Int>
  */
 fun countLetters(str: String): List<Char>
 {
-    val result = mutableListOf<Char>()
+    val result = ArrayList<Char>()
     for (i in 0 until str.length)
-        result.add(i, str[i])
+        result.add(str[i])
     result.sort()
 
-    return result.toList()
+    return result
 }
 
 fun hasAnagrams(words: List<String>): Boolean
 {
-    for (i in 0 until words.size - 1)
+    val size = words.size
+    for (i in 0 until size - 1)
     {
         val lettersFirst = countLetters(words[i])
 
-        for (j in i + 1 until words.size)
+        for (j in i + 1 until size)
         {
             val lettersSecond = countLetters(words[j])
 
@@ -397,10 +402,11 @@ fun hasAnagrams(words: List<String>): Boolean
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int>
 {
-    for (i in 0 until list.size - 1)
+    val size = list.size
+    for (i in 0 until size - 1)
     {
         val tmp = number - list[i]
-        for (j in i + 1 until list.size)
+        for (j in i + 1 until size)
             if (list[j] == tmp) return Pair(i, j)
     }
 

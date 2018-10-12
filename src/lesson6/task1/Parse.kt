@@ -448,7 +448,7 @@ fun fromRoman(roman: String): Int
     val arabicNumbersOther = listOf(4, 9, 40, 90, 400, 900)
     val lengthRoman = roman.length
 
-    if (roman.length == 0) return -1
+    if (lengthRoman == 0) return -1
     for (i in 0 until lengthRoman)
         if (roman[i] !in setOf('I', 'V', 'X', 'L', 'C', 'D', 'M')) return -1
 
