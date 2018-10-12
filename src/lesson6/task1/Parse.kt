@@ -415,13 +415,8 @@ fun firstDuplicateIndex(str: String): Int
  */
 fun mostExpensive(description: String): String
 {
-    // создание строки без ;
-    val tmp = StringBuilder("")
-    for (i in 0 until description.length)
-        if (description[i] != ';') tmp.append(description[i])
-
-    val input = tmp.split(" ")
-
+    val description = description.filter {it != ';'}
+    val input = description.split(" ")
 
     var max = -1.0
     var result = ""
