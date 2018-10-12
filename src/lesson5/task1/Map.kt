@@ -1,7 +1,6 @@
 @file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
 
 package lesson5.task1
-//import java.lang.Math.*
 
 /**
  * Пример
@@ -134,7 +133,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>>
         else
             result[grade] = listOf(name)
 
-    for ((grade, names) in result)
+    for ((grade) in result)
         result[grade] = result[grade]?.sortedDescending() ?: listOf()
 
     return result
@@ -268,13 +267,13 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>)
 {
-    val deleteItems = mutableListOf<String>()
+    val deleteItems = ArrayList<String>()
 
     for ((firstStringA, secondStringA) in a)
         for ((firstStringB, secondStringB) in b)
             if (firstStringA == firstStringB && secondStringA == secondStringB)
             {
-                deleteItems.add(deleteItems.size, firstStringA)
+                deleteItems.add(firstStringA)
                 break
             }
 
