@@ -129,7 +129,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>>
 
     for ((name, grade) in grades)
         if (grade in result)
-            result[grade] = result[grade]?.plus(name) ?: listOf()
+            result[grade] = result[grade]!!.plus(name)
         else
             result[grade] = listOf(name)
 
@@ -170,27 +170,23 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double>
 {
-    val namesOfStocks = ArrayList<String>()
-
-    for (element in 0 until stockPrices.size)
-        if (stockPrices[element].first !in namesOfStocks)
-            namesOfStocks.add(stockPrices[element].first)
-
     val result = mutableMapOf<String, Double>()
-    for (element in 0 until namesOfStocks.size)
-    {
-        var count = 0
-        var sum = 0.0
+    val number = mutableMapOf<String, Int>()
 
-        for (name in 0 until stockPrices.size)
-            if (namesOfStocks[element] == stockPrices[name].first)
-            {
-                count++
-                sum += stockPrices[name].second
-            }
+    for (element in stockPrices)
+        if (element.first in result)
+        {
+            result[element.first] = result[element.first] !!+ element.second
+            number[element.first] = number[element.first] !!+ 1
+        }
+        else
+        {
+            result[element.first] = element.second
+            number[element.first] = 1
+        }
 
-        result[namesOfStocks[element]] = sum / count
-    }
+    for ((name) in result)
+        result[name] = result[name] !!/ number[name]!!.toInt()
 
     return result        
 }
@@ -293,18 +289,8 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>)
 {
-    val deleteItems = ArrayList<String>()
-
-    for ((firstStringA, secondStringA) in a)
-        for ((firstStringB, secondStringB) in b)
-            if (firstStringA == firstStringB && secondStringA == secondStringB)
-            {
-                deleteItems.add(firstStringA)
-                break
-            }
-
-    for (i in 0 until deleteItems.size)
-        a.remove(deleteItems[i])
+    for ((firstStringB, secondStringB) in b)
+        if (a[firstStringB] == secondStringB) a.remove(firstStringB)
 }
 
 /**
@@ -381,28 +367,20 @@ fun extractRepeats(list: List<String>): Map<String, Int>
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun countLetters(str: String): List<Char>
-{
-    val result = ArrayList<Char>()
-    for (i in 0 until str.length)
-        result.add(str[i])
-    result.sort()
-
-    return result
-}
-
 fun hasAnagrams(words: List<String>): Boolean
 {
     val size = words.size
     for (i in 0 until size - 1)
     {
-        val lettersFirst = countLetters(words[i])
+        var tmp : CharSequence = words[i]
+        val lettersFirst = tmp.toSet()
 
         for (j in i + 1 until size)
         {
-            val lettersSecond = countLetters(words[j])
+            tmp = words[j]
+            val lettersSecond = tmp.toSet()
 
-            if (lettersFirst == lettersSecond) return true
+            if (lettersFirst.equals(lettersSecond)) return true
         }
     }
 

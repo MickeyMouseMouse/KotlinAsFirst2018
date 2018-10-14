@@ -286,17 +286,17 @@ fun factorizeToString(n: Int) = factorize(n).joinToString(separator = "*")
  */
 fun convert(n: Int, base: Int): List<Int>
 {
-    val list = ArrayList<Int>()
+    val list = mutableListOf<Int>()
     var n = n
 
     do
     {
-        list.addAll(0, listOf(n % base))
+        list.add(n % base)
         n /= base
     }
     while (n != 0)
 
-    return list
+    return list.reversed()
 }
 
 /**
@@ -388,56 +388,47 @@ fun decimalFromString(str: String, base: Int): Int
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
+fun newDigit(type: String, x: Int, result: StringBuilder)
+{
+    val romanDigits = mapOf("hundreds" to "CDM",
+                            "decades" to "XLC",
+                            "units" to "IVX")
+    val result = result
+
+    when (x)
+    {
+        1, 2, 3 -> repeat(x) {result.append(romanDigits[type]!![0])}
+
+        4 -> {
+                result.append(romanDigits[type]!![0])
+                result.append(romanDigits[type]!![1])
+             }
+
+        5 -> result.append(romanDigits[type]!![1])
+
+        6, 7, 8 ->
+        {
+            result.append(romanDigits[type]!![1])
+            repeat(x - 5) {result.append(romanDigits[type]!![0])}
+        }
+
+        9 -> {
+                result.append(romanDigits[type]!![0])
+                result.append(romanDigits[type]!![2])
+             }
+    }
+}
+
 fun roman(n: Int): String
 {
-    val thousand = n / 1000
-    val hundreds = (n % 1000) / 100
-    val decades = (n % 100) / 10
-    val units = n % 10
-
     val result = StringBuilder("")
 
-    for (i in 1..thousand)
+    for (i in 1..n / 1000)
         result.append('M')
 
-    when (hundreds)
-    {
-        1, 2, 3 -> repeat(hundreds) {result.append('C')}
-        4 -> result.append("CD")
-        5 -> result.append("D")
-        6, 7, 8 ->
-        {
-            result.append("D")
-            repeat(hundreds - 5) {result.append("C")}
-        }
-        9 -> result.append("CM")
-    }
-
-    when (decades)
-    {
-        1, 2, 3 -> repeat(decades) {result.append('X')}
-        4 -> result.append("XL")
-        5 -> result.append("L")
-        6, 7, 8 ->
-        {
-            result.append("L")
-            repeat(decades - 5) {result.append("X")}
-        }
-        9 -> result.append("XC")
-    }
-
-    when (units)
-    {
-        1, 2, 3 -> repeat(units) {result.append('I')}
-        4 -> result.append("IV")
-        5 -> result.append("V")
-        6, 7, 8 ->
-        {
-            result.append("V")
-            repeat(units - 5) {result.append("I")}
-        }
-        9 -> result.append("IX")
-    }
+    newDigit("hundreds", (n % 1000) / 100, result)
+    newDigit("decades",(n % 100) / 10, result)
+    newDigit("units",n % 10, result)
 
     return result.toString()
 }
