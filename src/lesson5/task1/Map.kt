@@ -376,20 +376,29 @@ fun extractRepeats(list: List<String>): Map<String, Int>
 {
     val result = mutableMapOf<String, Int>()
 
-    val size = list.size
-    for (i in 0 until size - 1)
+    val list = list.sorted()
+    val newList = ArrayList<String>()
+    var i = 0
+    while (i < list.size)
     {
-        if (list[i] in result) continue
+        if (i == 0 && list[i] == list[i + 1]) newList.add(list[i])
 
-        var numberOfRepeats = 1
-        for (j in i + 1 until size)
-            if (list[i] == list[j]) numberOfRepeats++
+        if (i != 0 && i != list.size - 1)
+            if (list[i - 1] == list[i] || list[i] == list[i + 1])
+                newList.add(list[i])
 
-        if (numberOfRepeats > 1)
-            result[list[i]] = numberOfRepeats
+        if (i == list.size - 1 && list[i] == list[i - 1]) newList.add(list[i])
+
+        i++
     }
 
-    return result.toMap()
+    for (i in 0 until newList.size)
+        if (newList[i] in result)
+            result[newList[i]] = result[newList[i]] !!+ 1
+        else
+            result[newList[i]] = 1
+
+    return result
 }
 
 /**
@@ -444,8 +453,8 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int>
     for (i in 0 until size - 1)
     {
         val tmp = number - list[i]
-        for (j in i + 1 until size)
-            if (list[j] == tmp) return Pair(i, j)
+
+        if (tmp in list) return Pair (i, list.indexOf(tmp))
     }
 
     return Pair(-1, -1)
