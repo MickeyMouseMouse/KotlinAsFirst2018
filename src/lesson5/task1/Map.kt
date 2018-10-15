@@ -245,6 +245,30 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
+fun findAllHandshakes(friends: Map<String, Set<String>>,
+                      result: MutableMap<String, MutableSet<String>>,
+                      withOutFriends: MutableMap<String, MutableSet<String>>,
+                      nameI: String,
+                      nameFriend: String,
+                      callTree: MutableSet<String>)
+{
+        if (friends.contains(nameFriend))
+        {
+            for (i in 0 until friends[nameFriend]!!.size)
+                if (friends[nameFriend]!!.elementAt(i) != nameI &&
+                    friends[nameFriend]!!.elementAt(i) !in callTree)
+                {
+                    result[nameI]!!.add(friends[nameFriend]!!.elementAt(i))
+
+                    callTree.add(friends[nameFriend]!!.elementAt(i))
+                    findAllHandshakes(friends, result, withOutFriends, nameI,
+                                friends[nameFriend]!!.elementAt(i), callTree)
+                }
+        }
+        else
+            withOutFriends[nameFriend] = mutableSetOf()
+}
+
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>>
 {
     val result = mutableMapOf<String, MutableSet<String>>()
@@ -255,21 +279,18 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         result[nameI] = mutableSetOf()
         for (i in 0 until friends[nameI]!!.size)
             result[nameI]?.add(friends[nameI]!!.elementAt(i))
-
-
-        for (nameJ in 0 until result[nameI]!!.size)
-        {
-            val tmp = result[nameI]!!.elementAt(nameJ)
-
-            if (friends.contains(tmp))
-            {
-                for (i in 0 until friends[tmp]!!.size)
-                    if (friends[tmp]!!.elementAt(i) != nameI) result[nameI]!!.add(friends[tmp]!!.elementAt(i))
-            }
-            else
-                withOutFriends[result[nameI]!!.elementAt(nameJ)] = mutableSetOf()
-        }
     }
+
+    for ((nameI) in friends)
+        for (i in 0 until friends[nameI]!!.size)
+        {
+            val callTree = mutableSetOf<String>()
+
+            callTree.add(friends[nameI]!!.elementAt(i))
+
+            findAllHandshakes(friends, result, withOutFriends, nameI,
+                              friends[nameI]!!.elementAt(i), callTree)
+        }
 
     return result + withOutFriends
 }
