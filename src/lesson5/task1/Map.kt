@@ -376,19 +376,19 @@ fun extractRepeats(list: List<String>): Map<String, Int>
 {
     val result = mutableMapOf<String, Int>()
 
+    if (list.size == 1) return result
+
     val list = list.sorted()
     val newList = ArrayList<String>()
     var i = 0
     while (i < list.size)
     {
-        if (i == 0 && list[i] == list[i + 1]) newList.add(list[i])
+        if ((i == 0 && list[i] == list[i + 1]) ||
+           (i == list.size - 1 && list[i] == list[i - 1])) newList.add(list[i])
 
         if (i != 0 && i != list.size - 1)
             if (list[i - 1] == list[i] || list[i] == list[i + 1])
                 newList.add(list[i])
-
-        if (i == list.size - 1 && list[i] == list[i - 1]) newList.add(list[i])
-
         i++
     }
 
