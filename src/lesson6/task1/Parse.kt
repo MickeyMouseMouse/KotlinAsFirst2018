@@ -72,6 +72,30 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+fun numberOfMonth(day: Int, month: Int, year: Int, nameOfMonth: String): Int
+{
+    val month = when (nameOfMonth)
+    {
+        "января" -> 1
+        "февраля" -> 2
+        "марта" -> 3
+        "апреля" -> 4
+        "мая" -> 5
+        "июня" -> 6
+        "июля" -> 7
+        "августа" -> 8
+        "сентября" -> 9
+        "октября" -> 10
+        "ноября" -> 11
+        "декабря" -> 12
+        else -> return 0
+    }
+
+    if (day !in 1..daysInMonth(month, year)) return 0
+
+    return month
+}
+
 fun dateStrToDigit(str: String): String
 {
     val input = str.split(" ")
@@ -80,39 +104,11 @@ fun dateStrToDigit(str: String): String
 
     try
     {
-        val month = when (input[1])
-                        {
-                            "января" -> 1
-                            "февраля" -> 2
-                            "марта" -> 3
-                            "апреля" -> 4
-                            "мая" -> 5
-                            "июня" -> 6
-                            "июля" -> 7
-                            "августа" -> 8
-                            "сентября" -> 9
-                            "октября" -> 10
-                            "ноября" -> 11
-                            "декабря" -> 12
-                            else -> return ""
-                        }
         val day = input[0].toInt()
         val year = input[2].toInt()
-        when (month)
-        {
-            1 -> if (day !in 1..31) return ""
-            2 -> if (day !in 1..daysInMonth(2, year)) return ""
-            3 -> if (day !in 1..31) return ""
-            4 -> if (day !in 1..30) return ""
-            5 -> if (day !in 1..31) return ""
-            6 -> if (day !in 1..30) return ""
-            7 -> if (day !in 1..31) return ""
-            8 -> if (day !in 1..31) return ""
-            9 -> if (day !in 1..30) return ""
-            10 -> if (day !in 1..31) return ""
-            11 -> if (day !in 1..30) return ""
-            else -> if (day !in 1..31) return ""
-        }
+        val month = numberOfMonth(day, 0, year, input[1])
+
+        if (month == 0) return ""
 
         return String.format("%02d.%02d.%d", day, month, year)
     }
@@ -132,6 +128,30 @@ fun dateStrToDigit(str: String): String
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
+fun nameOfMonth(day: Int, month: String, year: Int, numberOfMonth: Int): String
+{
+    val month = when (numberOfMonth)
+    {
+        1 -> "января"
+        2 -> "февраля"
+        3 -> "марта"
+        4 -> "апреля"
+        5 -> "мая"
+        6 -> "июня"
+        7 -> "июля"
+        8 -> "августа"
+        9 -> "сентября"
+        10 -> "октября"
+        11 -> "ноября"
+        12 -> "декабря"
+        else -> return ""
+    }
+
+    if (day !in 1..daysInMonth(numberOfMonth, year)) return ""
+
+    return month
+}
+
 fun dateDigitToStr(digital: String): String
 {
     val input = digital.split(".")
@@ -140,40 +160,11 @@ fun dateDigitToStr(digital: String): String
 
     try
     {
-        val month = when (input[1].toInt())
-        {
-            1 -> "января"
-            2 -> "февраля"
-            3 -> "марта"
-            4 -> "апреля"
-            5 -> "мая"
-            6 -> "июня"
-            7 -> "июля"
-            8 -> "августа"
-            9 -> "сентября"
-            10 -> "октября"
-            11 -> "ноября"
-            12 -> "декабря"
-            else -> return ""
-        }
-
         val day = input[0].toInt()
         val year = input[2].toInt()
-        when (input[1].toInt())
-        {
-            1 -> if (day !in 1..31) return ""
-            2 -> if (day !in 1..daysInMonth(2, year)) return ""
-            3 -> if (day !in 1..31) return ""
-            4 -> if (day !in 1..30) return ""
-            5 -> if (day !in 1..31) return ""
-            6 -> if (day !in 1..30) return ""
-            7 -> if (day !in 1..31) return ""
-            8 -> if (day !in 1..31) return ""
-            9 -> if (day !in 1..30) return ""
-            10 -> if (day !in 1..31) return ""
-            11 -> if (day !in 1..30) return ""
-            else -> if (day !in 1..31) return ""
-        }
+        val month = nameOfMonth(day, "", year, input[1].toInt())
+
+        if (month == "") return ""
 
         return String.format("%d %s %d", day, month, year)
     }
