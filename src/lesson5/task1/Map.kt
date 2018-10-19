@@ -134,7 +134,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>>
             result[grade] = listOf(name)
 
     for ((grade) in result)
-        result[grade] = result[grade]?.sortedDescending() ?: listOf()
+        result[grade] = result[grade]!!.sortedDescending()
 
     return result
 }
@@ -174,6 +174,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val number = mutableMapOf<String, Int>()
 
     for (element in stockPrices)
+    {
         if (element.first in result)
         {
             result[element.first] = result[element.first] !!+ element.second
@@ -184,6 +185,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
             result[element.first] = element.second
             number[element.first] = 1
         }
+    }
 
     for ((name) in result)
         result[name] = result[name] !!/ number[name]!!.toInt()
