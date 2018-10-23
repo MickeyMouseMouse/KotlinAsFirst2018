@@ -188,7 +188,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     }
 
     for ((name) in result)
-        result[name] = result[name] !!/ number[name]!!.toInt()
+        result[name] = result[name] !!/ number[name]!!
 
     return result        
 }
@@ -212,7 +212,6 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
 {
     var cheapeastCost = Double.MAX_VALUE
     var result : String? = null
-    var fl = true
 
     for ((name, pair) in stuff)
         if (pair.first == kind && pair.second <= cheapeastCost)
@@ -224,11 +223,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
             }
             else
             {
-                if (cheapeastCost == Double.MAX_VALUE && fl)
-                {
+                if (result == null)
                     result = name
-                    fl = false
-                }
             }
         }
 
@@ -263,20 +259,18 @@ fun findAllHandshakes(friends: Map<String, Set<String>>,
                       result: MutableMap<String, MutableSet<String>>,
                       withOutFriends: MutableMap<String, MutableSet<String>>,
                       nameI: String,
-                      nameFriend: String,
-                      callTree: MutableSet<String>)
+                      nameFriend: String)
 {
         if (friends.contains(nameFriend))
         {
             for (i in 0 until friends[nameFriend]!!.size)
                 if (friends[nameFriend]!!.elementAt(i) != nameI &&
-                    friends[nameFriend]!!.elementAt(i) !in callTree)
+                    friends[nameFriend]!!.elementAt(i) !in result[nameI]!!)
                 {
-                    result[nameI]!!.add(friends[nameFriend]!!.elementAt(i))
+                    result[nameI]!!.addAll(setOf(friends[nameFriend]!!.elementAt(i)))
 
-                    callTree.add(friends[nameFriend]!!.elementAt(i))
                     findAllHandshakes(friends, result, withOutFriends, nameI,
-                                friends[nameFriend]!!.elementAt(i), callTree)
+                                      friends[nameFriend]!!.elementAt(i))
                 }
         }
         else
@@ -292,19 +286,13 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     {
         result[nameI] = mutableSetOf()
         for (i in 0 until friends[nameI]!!.size)
-            result[nameI]?.add(friends[nameI]!!.elementAt(i))
+            result[nameI]?.addAll(setOf(friends[nameI]!!.elementAt(i)))
     }
 
     for ((nameI) in friends)
         for (i in 0 until friends[nameI]!!.size)
-        {
-            val callTree = mutableSetOf<String>()
-
-            callTree.add(friends[nameI]!!.elementAt(i))
-
             findAllHandshakes(friends, result, withOutFriends, nameI,
-                              friends[nameI]!!.elementAt(i), callTree)
-        }
+                              friends[nameI]!!.elementAt(i))
 
     return result + withOutFriends
 }
@@ -417,7 +405,7 @@ fun hasAnagrams(words: List<String>): Boolean
     val size = words.size
     for (i in 0 until size - 1)
     {
-        var tmp : CharSequence = words[i]
+        var tmp = words[i]
         val lettersFirst = tmp.toSet()
 
         for (j in i + 1 until size)
@@ -454,10 +442,12 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int>
     val size = list.size
     for (i in 0 until size - 1)
     {
-        val tmp = number - list[i]
-        if (tmp in list)
+        val tmpNumber = number - list[i]
+        val tmpList = list.toMutableList()
+        tmpList[i] = tmpList[i] - 1
+        if (tmpNumber in tmpList)
         {
-            val index = list.indexOf(tmp)
+            val index = tmpList.indexOf(tmpNumber)
 
             if (i != index) return Pair(i, index)
         }
