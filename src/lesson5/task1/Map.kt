@@ -442,6 +442,8 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int>
     for (i in 0 until size - 1)
     {
         val tmpNumber = number - list[i]
+        if (tmpNumber < 0) continue
+
         val tmpList = list.toMutableList()
         tmpList[i] = - 1
         if (tmpNumber in tmpList)
