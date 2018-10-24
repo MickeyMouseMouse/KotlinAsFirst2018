@@ -72,7 +72,7 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun numberOfMonth(day: Int, month: Int, year: Int, nameOfMonth: String): Int
+fun numberOfMonth(day: Int, year: Int, nameOfMonth: String): Int
 {
     val month = when (nameOfMonth)
     {
@@ -102,20 +102,16 @@ fun dateStrToDigit(str: String): String
 
     if (input.size != 3) return ""
 
-    try
-    {
-        val day = input[0].toInt()
-        val year = input[2].toInt()
-        val month = numberOfMonth(day, 0, year, input[1])
+    val day = input[0].toIntOrNull()
+    val year = input[2].toIntOrNull()
 
-        if (month == 0) return ""
+    if (day == null || year == null) return ""
 
-        return String.format("%02d.%02d.%d", day, month, year)
-    }
-    catch (e: Exception)
-    {
-        return ""
-    }
+    val month = numberOfMonth(day, year, input[1])
+
+    if (month == 0) return ""
+
+    return String.format("%02d.%02d.%d", day, month, year)
 }
 
 /**
@@ -128,7 +124,7 @@ fun dateStrToDigit(str: String): String
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun nameOfMonth(day: Int, month: String, year: Int, numberOfMonth: Int): String
+fun nameOfMonth(day: Int, year: Int, numberOfMonth: Int): String
 {
     val month = when (numberOfMonth)
     {
@@ -158,20 +154,16 @@ fun dateDigitToStr(digital: String): String
 
     if (input.size != 3) return ""
 
-    try
-    {
-        val day = input[0].toInt()
-        val year = input[2].toInt()
-        val month = nameOfMonth(day, "", year, input[1].toInt())
+    val day = input[0].toIntOrNull()
+    val year = input[2].toIntOrNull()
 
-        if (month == "") return ""
+    if (day == null || year == null) return ""
 
-        return String.format("%d %s %d", day, month, year)
-    }
-    catch (e: Exception)
-    {
-        return ""
-    }
+    val month = nameOfMonth(day, year, input[1].toInt())
+
+    if (month == "") return ""
+
+    return String.format("%d %s %d", day, month, year)
 }
 
 /**
@@ -218,11 +210,11 @@ fun flattenPhoneNumber(phone: String): String
  */
 fun bestLongJump(jumps: String): Int
 {
-    val tmp = StringBuilder("")
+    val tmpStr = StringBuilder("")
     var index = 0
     while (index < jumps.length)
     {
-        tmp.append(jumps[index])
+        tmpStr.append(jumps[index])
 
         if (jumps[index] == ' ')
             while(jumps[index] == ' ')
@@ -232,19 +224,20 @@ fun bestLongJump(jumps: String): Int
     }
 
 
-    val input = tmp.split(" ")
+    val input = tmpStr.split(" ")
 
-    var max = -1
-    try
-    {
-        for (i in 0 until input.size)
-            if (input[i][0] !in setOf('%', '-'))
-                if (input[i].toInt() > max) max = input[i].toInt()
-    }
-    catch (e: Exception)
-    {
-        return -1
-    }
+    var max : Int = -1
+    for (i in 0 until input.size)
+        if (input[i][0] !in setOf('%', '-'))
+        {
+            val tmpNumber = input[i].toIntOrNull()
+            if (tmpNumber != null)
+            {
+                if (tmpNumber > max) max = tmpNumber
+            }
+            else
+                return -1
+        }
 
     return max
 }
@@ -275,30 +268,26 @@ fun bestHighJump(jumps: String): Int
     for (i in 1 until lengthJumps)
         if (jumps[i] != '+')
         {
-            if ((jumps[i].toInt() - '0'.toInt() in 0..9) &&
-                (jumps[i - 1] == ' ') &&
-                (jumps[i + 1] == ' '))
+            if (jumps[i].toInt() - '0'.toInt() in 0..9)
+                when (jumps[i - 1])
                 {
-                    startNumber = i
-                    endNumber = i
-                    continue
+                    ' ' ->
+                    {
+                        if (jumps[i + 1] == ' ')
+                           {
+                               startNumber = i
+                               endNumber = i
+                           }
+
+                        if (jumps[i + 1].toInt() - '0'.toInt() in 0..9) startNumber = i
+                    }
+
+                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ->
+                        if (jumps[i + 1] == ' ')
+                        {
+                            endNumber = i
+                        }
                 }
-
-            if ((jumps[i].toInt() - '0'.toInt() in 0..9) &&
-                (jumps[i - 1].toInt() - '0'.toInt() in 0..9) &&
-                (jumps[i + 1] == ' '))
-            {
-                endNumber = i
-                continue
-            }
-
-            if ((jumps[i].toInt() - '0'.toInt() in 0..9) &&
-                (jumps[i + 1].toInt() - '0'.toInt() in 0..9) &&
-                (jumps[i - 1] == ' ' && i - 1 >= 0))
-            {
-                startNumber = i
-                continue
-            }
         }
         else
         {
@@ -325,42 +314,34 @@ fun bestHighJump(jumps: String): Int
  */
 fun plusMinus(expression: String): Int
 {
-    try
-    {
-        val input = expression.split(" ")
+    val input = expression.split(" ")
 
-        for (i in 0 until input.size)
-            if (i % 2 == 0)
-            {
-                for (j in 0 until input[i].length)
-                    if (input[i][j].toInt() - '0'.toInt() !in 0..9) throw IllegalArgumentException("")
-            }
-            else
-                if (input[i] != "+" && input[i] != "-") throw IllegalArgumentException("")
-
-        var result = 0
-        var sign = 1 // 1 = +; 0 = -
-
-        for (i in 0 until input.size step 2)
+    for (i in 0 until input.size)
+        if (i % 2 == 0)
         {
-            if (sign == 1)
-                result += input[i].toInt()
-            else
-                result -= input[i].toInt()
-
-            if (i != input.size - 1)
-                if (input[i + 1] == "+")
-                    sign = 1
-                else
-                    sign = 0
+            for (j in 0 until input[i].length)
+                if (input[i][j].toInt() - '0'.toInt() !in 0..9)
+                    throw IllegalArgumentException("")
         }
+        else
+            if (input[i] != "+" && input[i] != "-")
+                throw IllegalArgumentException("")
 
-        return result
-    }
-    catch (e: Exception)
+    var result = 0
+    var sign = true // true = +; false = -
+
+    for (i in 0 until input.size step 2)
     {
-        throw IllegalArgumentException("")
+        if (sign)
+            result += input[i].toInt()
+        else
+            result -= input[i].toInt()
+
+        if (i != input.size - 1)
+            sign = if (input[i + 1] == "+") true else false
     }
+
+    return result
 }
 
 /**
@@ -376,21 +357,14 @@ fun firstDuplicateIndex(str: String): Int
 {
     val input = str.split(" ")
 
-    var tmp = -1
+    var result = 0
     for (i in 0 until input.size - 1)
-        if (input[i].toLowerCase() == input[i + 1].toLowerCase())
-        {
-            tmp = i
-            break
-        }
+        if (input[i].toLowerCase() != input[i + 1].toLowerCase())
+            result += input[i].length + 1
+        else
+            return result
 
-    if (tmp == -1) return -1
-
-    var result = -1
-    for (i in 0 until tmp)
-        result += input[i].length + 1
-
-    return result + 1
+    return -1
 }
 
 /**

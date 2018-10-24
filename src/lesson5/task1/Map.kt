@@ -267,7 +267,7 @@ fun findAllHandshakes(friends: Map<String, Set<String>>,
                 if (friends[nameFriend]!!.elementAt(i) != nameI &&
                     friends[nameFriend]!!.elementAt(i) !in result[nameI]!!)
                 {
-                    result[nameI]!!.addAll(setOf(friends[nameFriend]!!.elementAt(i)))
+                    result[nameI]!!.add(friends[nameFriend]!!.elementAt(i))
 
                     findAllHandshakes(friends, result, withOutFriends, nameI,
                                       friends[nameFriend]!!.elementAt(i))
@@ -285,8 +285,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for ((nameI) in friends)
     {
         result[nameI] = mutableSetOf()
-        for (i in 0 until friends[nameI]!!.size)
-            result[nameI]?.addAll(setOf(friends[nameI]!!.elementAt(i)))
+        result[nameI]?.addAll(friends[nameI]!!)
     }
 
     for ((nameI) in friends)
@@ -449,7 +448,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int>
         {
             val index = tmpList.indexOf(tmpNumber)
 
-            if (i != index) return Pair(i, index)
+            return Pair(i, index)
         }
     }
     return Pair(-1, -1)
