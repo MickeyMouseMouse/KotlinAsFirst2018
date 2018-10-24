@@ -210,6 +210,8 @@ fun flattenPhoneNumber(phone: String): String
  */
 fun bestLongJump(jumps: String): Int
 {
+    if (jumps.length == 0) return -1
+
     val tmpStr = StringBuilder("")
     var index = 0
     while (index < jumps.length)
@@ -222,7 +224,6 @@ fun bestLongJump(jumps: String): Int
         else
             index++
     }
-
 
     val input = tmpStr.split(" ")
 
@@ -314,6 +315,8 @@ fun bestHighJump(jumps: String): Int
  */
 fun plusMinus(expression: String): Int
 {
+    if (expression.length == 0) throw IllegalArgumentException("")
+
     val input = expression.split(" ")
 
     for (i in 0 until input.size)
