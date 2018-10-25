@@ -180,17 +180,37 @@ fun dateDigitToStr(digital: String): String
  */
 fun flattenPhoneNumber(phone: String): String
 {
-    val permissibleSymbols =
-            setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                  ' ', '+', '-', '(', ')')
+    val digits = setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+    val symbols = setOf(' ', '+', '-', '(', ')')
+
     val result = StringBuilder("")
 
-    for (symbol in phone)
+    val phoneLenght = phone.length
+    for (i in 0 until phoneLenght)
     {
-        if (symbol !in permissibleSymbols) return ""
+        if (phone[i] !in symbols && phone[i] !in digits) return ""
+        if (phone[i] == '+' && result.length != 0) return ""
+        if (phone[i] == '(')
+        {
+            if (i != phoneLenght - 1)
+            {
+                if (phone[i + 1] == ')') return ""
+            }
+            else
+                return ""
 
-        if (symbol != ' ' && symbol != '-' &&
-            symbol != '(' && symbol != ')') result.append(symbol)
+            var j = i + 1
+            while (j < phoneLenght)
+            {
+                if (phone[j] == ')') break
+                j++
+            }
+
+            if (j == phoneLenght) return ""
+        }
+
+        if (phone[i] != ' ' && phone[i] != '-' &&
+            phone[i] != '(' && phone[i] != ')') result.append(phone[i])
     }
 
     if (result.length == 1 && result[0] == '+') return ""
@@ -260,13 +280,14 @@ fun bestHighJump(jumps: String): Int
 
     val jumps = ' ' + jumps
     val lengthJumps = jumps.length
-    for (i in 0 until lengthJumps)
-        if (jumps[i] !in permissibleSymbols) return -1
 
     var startNumber = 0
     var endNumber = 0
     var result = -1
     for (i in 1 until lengthJumps)
+    {
+        if (jumps[i] !in permissibleSymbols) return -1
+
         if (jumps[i] != '+')
         {
             if (jumps[i].toInt() - '0'.toInt() in 0..9)
@@ -300,6 +321,7 @@ fun bestHighJump(jumps: String): Int
             }
             if (number > result) result = number
         }
+    }
 
     return result
 }
@@ -389,11 +411,16 @@ fun mostExpensive(description: String): String
     var max = -1.0
     var result = ""
     for (i in 1 until input.size step 2)
-        if (input[i].toDouble() > max)
+    {
+        val tmp = input[i].toDoubleOrNull()
+        if (tmp == null) return ""
+
+        if (tmp > max)
         {
             max = input[i].toDouble()
             result = input[i - 1]
         }
+    }
 
 
     return result
