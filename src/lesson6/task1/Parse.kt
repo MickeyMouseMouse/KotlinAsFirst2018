@@ -258,7 +258,7 @@ fun bestLongJump(jumps: String): Int
 fun deleteWasteSpace(str : String) : StringBuilder
 {
     val result = StringBuilder("")
-    if (str == "") return result
+    if (str == "" || str == " ") return result
 
     var index = 0
     if (str[0] == ' ') index++
