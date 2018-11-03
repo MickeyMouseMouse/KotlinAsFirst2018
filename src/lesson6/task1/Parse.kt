@@ -448,9 +448,13 @@ fun fromRoman(roman: String): Int
         if (roman[i] !in setOf('I', 'V', 'X', 'L', 'C', 'D', 'M')) return -1
 
     for (i in 0 until lengthRoman - 4)
+    {
+        if (roman[i] == 'M') continue
+
         if (roman[i] == roman[i + 1] &&
             roman[i] == roman[i + 2] &&
             roman[i] == roman[i + 3]) return -1
+    }
 
     var result = 0
     var i = 0
