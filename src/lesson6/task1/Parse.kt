@@ -2,6 +2,7 @@
 
 package lesson6.task1
 import lesson2.task2.daysInMonth
+import kotlin.math.exp
 
 /**
  * Пример
@@ -72,24 +73,18 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+val monthes = listOf("января", "февраля", "марта", "апреля", "мая",
+        "июня", "июля", "августа", "сентября", "октября",
+        "ноября", "декабря")
+
 fun numberOfMonth(day: Int, year: Int, nameOfMonth: String): Int
 {
-    val month = when (nameOfMonth)
-    {
-        "января" -> 1
-        "февраля" -> 2
-        "марта" -> 3
-        "апреля" -> 4
-        "мая" -> 5
-        "июня" -> 6
-        "июля" -> 7
-        "августа" -> 8
-        "сентября" -> 9
-        "октября" -> 10
-        "ноября" -> 11
-        "декабря" -> 12
-        else -> return 0
-    }
+    var month = monthes.indexOf(nameOfMonth)
+
+    if (month == -1)
+        return 0
+    else
+        month++
 
     if (day !in 1..daysInMonth(month, year)) return 0
 
@@ -126,22 +121,9 @@ fun dateStrToDigit(str: String): String
  */
 fun nameOfMonth(day: Int, year: Int, numberOfMonth: Int): String
 {
-    val month = when (numberOfMonth)
-    {
-        1 -> "января"
-        2 -> "февраля"
-        3 -> "марта"
-        4 -> "апреля"
-        5 -> "мая"
-        6 -> "июня"
-        7 -> "июля"
-        8 -> "августа"
-        9 -> "сентября"
-        10 -> "октября"
-        11 -> "ноября"
-        12 -> "декабря"
-        else -> return ""
-    }
+    if (numberOfMonth !in 1..12) return ""
+
+    val month = monthes[numberOfMonth - 1]
 
     if (day !in 1..daysInMonth(numberOfMonth, year)) return ""
 
@@ -273,53 +255,57 @@ fun bestLongJump(jumps: String): Int
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int
+fun deleteWasteSpace(str : String) : StringBuilder
 {
-    val permissibleSymbols = setOf('0', '1', '2', '3', '4', '5', '6', '7',
-                                   '8', '9', ' ', '+', '%', '-')
+    val result = StringBuilder("")
+    if (str == "") return result
 
-    val jumps = ' ' + jumps
-    val lengthJumps = jumps.length
-
-    var startNumber = 0
-    var endNumber = 0
-    var result = -1
-    for (i in 1 until lengthJumps)
+    var index = 0
+    if (str[0] == ' ') index++
+    while (index < str.length)
     {
-        if (jumps[i] !in permissibleSymbols) return -1
-
-        if (jumps[i] != '+')
+        if (str[index] != ' ')
         {
-            if (jumps[i].toInt() - '0'.toInt() in 0..9)
-                when (jumps[i - 1])
-                {
-                    ' ' ->
-                    {
-                        if (jumps[i + 1] == ' ')
-                           {
-                               startNumber = i
-                               endNumber = i
-                           }
-
-                        if (jumps[i + 1].toInt() - '0'.toInt() in 0..9) startNumber = i
-                    }
-
-                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ->
-                        if (jumps[i + 1] == ' ')
-                        {
-                            endNumber = i
-                        }
-                }
+            result.append(str[index])
+            index++
         }
         else
         {
-            var number = 0
-            for (j in startNumber..endNumber)
+            result.append(' ')
+            while (str[index] == ' ')
             {
-                number *= 10
-                number += jumps[j].toInt() - '0'.toInt()
+                index++
+
+                if (index == str.length) break
             }
-            if (number > result) result = number
+        }
+    }
+
+    return result
+}
+
+fun bestHighJump(jumps: String): Int
+{
+    val permissibleSymbols = setOf('+', '%', '-')
+
+    val splitting = deleteWasteSpace(jumps).toString().split(" ")
+    val size = splitting.size
+    if (size % 2 != 0) return -1
+
+    var result = -1
+    for (i in 0 until size step 2)
+    {
+        val high = splitting[i].toIntOrNull()
+
+        if (high == null)
+            return -1
+        else
+        {
+            for (j in 0 until splitting[i + 1].length)
+                if (splitting[i + 1][j] !in permissibleSymbols) return -1
+
+            if ('+' in splitting[i + 1] && result < high)
+                result = high
         }
     }
 
@@ -335,11 +321,14 @@ fun bestHighJump(jumps: String): Int
  * Вернуть значение выражения (6 для примера).
  * При нарушении формата входной строки бросить исключение IllegalArgumentException
  */
+
 fun plusMinus(expression: String): Int
 {
     if (expression.length == 0) throw IllegalArgumentException("")
 
-    val input = expression.split(" ")
+    val str = deleteWasteSpace(expression)
+    val input = str.split(" ")
+    if (input.size % 2 == 0) throw IllegalArgumentException("")
 
     for (i in 0 until input.size)
         if (i % 2 == 0)
@@ -363,7 +352,7 @@ fun plusMinus(expression: String): Int
             result -= input[i].toInt()
 
         if (i != input.size - 1)
-            sign = if (input[i + 1] == "+") true else false
+            sign = (input[i + 1] == "+")
     }
 
     return result
@@ -405,23 +394,34 @@ fun firstDuplicateIndex(str: String): Int
  */
 fun mostExpensive(description: String): String
 {
-    val description = description.filter {it != ';'}
-    val input = description.split(" ")
+    if (description == "") return ""
+
+    val description = deleteWasteSpace(description)
+    var index = 0
+    while (index < description.length)
+    {
+        if (description[index] == ';') description.deleteCharAt(index + 1)
+        index++
+    }
+
+    val input = description.split(";")
 
     var max = -1.0
     var result = ""
-    for (i in 1 until input.size step 2)
+    for (i in 0 until input.size)
     {
-        val tmp = input[i].toDoubleOrNull()
-        if (tmp == null) return ""
+        val tmp = input[i].split(" ")
+        if (tmp.size != 2) return ""
 
-        if (tmp > max)
+        val cost = tmp[1].toDoubleOrNull()
+        if (cost == null) return ""
+
+        if (cost > max)
         {
-            max = input[i].toDouble()
-            result = input[i - 1]
+            max = cost
+            result = tmp[0]
         }
     }
-
 
     return result
 }
@@ -447,25 +447,32 @@ fun fromRoman(roman: String): Int
     for (i in 0 until lengthRoman)
         if (roman[i] !in setOf('I', 'V', 'X', 'L', 'C', 'D', 'M')) return -1
 
+    for (i in 0 until lengthRoman - 4)
+        if (roman[i] == roman[i + 1] &&
+            roman[i] == roman[i + 2] &&
+            roman[i] == roman[i + 3]) return -1
+
     var result = 0
-    var tmp = 0 // индекс элемента строки
-    while (tmp < lengthRoman)
+    var i = 0
+    while (i < lengthRoman)
     {
-        when (roman[tmp])
+        when (roman[i])
         {
-            'I' -> if (tmp + 1 != lengthRoman)
-                    when (roman[tmp + 1])
+            'I' -> if (i + 1 != lengthRoman)
+                    when (roman[i + 1])
                     {
+                        'L', 'C', 'D', 'M' -> return -1
+
                         'V' ->
                         {
                             result += arabicNumbersOther[0]
-                            tmp++
+                            i++
                         }
 
                         'X' ->
                         {
                             result += arabicNumbersOther[1]
-                            tmp++
+                            i++
                         }
 
                         else -> result += arabicNumbers[0]
@@ -475,19 +482,21 @@ fun fromRoman(roman: String): Int
 
             'V' -> result += arabicNumbers[1]
 
-            'X' -> if (tmp + 1 != lengthRoman)
-                    when (roman[tmp + 1])
+            'X' -> if (i + 1 != lengthRoman)
+                    when (roman[i + 1])
                     {
+                        'D', 'M' -> return -1
+
                         'L' ->
                         {
                             result += arabicNumbersOther[2]
-                            tmp++
+                            i++
                         }
 
                         'C' ->
                         {
                             result += arabicNumbersOther[3]
-                            tmp++
+                            i++
                         }
 
                         else -> result += arabicNumbers[2]
@@ -497,19 +506,19 @@ fun fromRoman(roman: String): Int
 
             'L' -> result += arabicNumbers[3]
 
-            'C' -> if (tmp + 1 != lengthRoman)
-                    when(roman[tmp + 1])
+            'C' -> if (i + 1 != lengthRoman)
+                    when(roman[i + 1])
                     {
                         'D' ->
                         {
                             result += arabicNumbersOther[4]
-                            tmp++
+                            i++
                         }
 
                         'M' ->
                         {
                             result += arabicNumbersOther[5]
-                            tmp++
+                            i++
                         }
 
                         else -> result += arabicNumbers[4]
@@ -522,7 +531,7 @@ fun fromRoman(roman: String): Int
             'M' -> result += arabicNumbers[6]
         }
 
-        tmp++
+        i++
     }
 
     return result
