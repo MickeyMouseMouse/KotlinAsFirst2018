@@ -177,7 +177,7 @@ fun flattenPhoneNumber(phone: String): String
     for (i in 0 until phone.length)
     {
         if (phone[i] !in setOf(' ', '+', '-', '(', ')') &&
-            phone[i] !in '0'..'9') return ""
+                phone[i] !in '0'..'9') return ""
 
         if (phone[i] != ' ' && phone[i] != '-' &&
             phone[i] != '(' && phone[i] != ')') result.append(phone[i])
