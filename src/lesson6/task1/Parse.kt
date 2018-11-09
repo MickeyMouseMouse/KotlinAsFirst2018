@@ -477,6 +477,8 @@ fun fromRoman(roman: String): Int
 
                            else -> result += arabicNumbers[1]
                        }
+                   else
+                    result += arabicNumbers[1]
 
             'X' -> if (i + 1 != lengthRoman)
                     when (roman[i + 1])
@@ -501,12 +503,14 @@ fun fromRoman(roman: String): Int
                     result += arabicNumbers[2]
 
             'L' -> if (i + 1 != lengthRoman)
-                when (roman[i + 1])
-                {
-                    'L', 'D', 'M' -> return -1
+                    when (roman[i + 1])
+                    {
+                        'L', 'D', 'M' -> return -1
 
-                    else -> result += arabicNumbers[3]
-                }
+                        else -> result += arabicNumbers[3]
+                    }
+                   else
+                    result += arabicNumbers[3]
 
             'C' -> if (i + 1 != lengthRoman)
                     when(roman[i + 1])
