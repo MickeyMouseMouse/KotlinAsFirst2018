@@ -399,25 +399,8 @@ fun extractRepeats(list: List<String>): Map<String, Int>
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean
-{
-    val size = words.size
-    for (i in 0 until size - 1)
-    {
-        var tmp = words[i]
-        val lettersFirst = tmp.toSet()
-
-        for (j in i + 1 until size)
-        {
-            tmp = words[j]
-            val lettersSecond = tmp.toSet()
-
-            if (lettersFirst.equals(lettersSecond)) return true
-        }
-    }
-
-    return false
-}
+fun hasAnagrams(words: List<String>) =
+        words.size != words.map {it.toList().sorted()}.toSet().size
 
 /**
  * Сложная

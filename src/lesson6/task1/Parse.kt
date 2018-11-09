@@ -162,40 +162,26 @@ fun dateDigitToStr(digital: String): String
  */
 fun flattenPhoneNumber(phone: String): String
 {
-    val digits = setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
-    val symbols = setOf(' ', '+', '-', '(', ')')
+    if (Regex("[/+]").findAll(phone).toList().size !in 0..1) return ""
+
+    val numberOpeningBrackets = Regex("[(]").findAll(phone).toList().size
+    val numberClosingBrackets = Regex("[)]").findAll(phone).toList().size
+    if (numberOpeningBrackets == 1)
+    {
+        if (numberClosingBrackets != 1) return ""
+    }
+    else
+        if (numberClosingBrackets != 0 || numberOpeningBrackets != 0) return ""
 
     val result = StringBuilder("")
-
-    val phoneLenght = phone.length
-    for (i in 0 until phoneLenght)
+    for (i in 0 until phone.length)
     {
-        if (phone[i] !in symbols && phone[i] !in digits) return ""
-        if (phone[i] == '+' && result.length != 0) return ""
-        if (phone[i] == '(')
-        {
-            if (i != phoneLenght - 1)
-            {
-                if (phone[i + 1] == ')') return ""
-            }
-            else
-                return ""
-
-            var j = i + 1
-            while (j < phoneLenght)
-            {
-                if (phone[j] == ')') break
-                j++
-            }
-
-            if (j == phoneLenght) return ""
-        }
+        if (phone[i] !in setOf(' ', '+', '-', '(', ')') &&
+            phone[i] !in '0'..'9') return ""
 
         if (phone[i] != ' ' && phone[i] != '-' &&
             phone[i] != '(' && phone[i] != ')') result.append(phone[i])
     }
-
-    if (result.length == 1 && result[0] == '+') return ""
 
     return result.toString()
 }
@@ -484,7 +470,13 @@ fun fromRoman(roman: String): Int
                    else
                     result += arabicNumbers[0]
 
-            'V' -> result += arabicNumbers[1]
+            'V' -> if (i + 1 != lengthRoman)
+                       when (roman[i + 1])
+                       {
+                           'V', 'L', 'C', 'D', 'M' -> return -1
+
+                           else -> result += arabicNumbers[1]
+                       }
 
             'X' -> if (i + 1 != lengthRoman)
                     when (roman[i + 1])
@@ -508,7 +500,13 @@ fun fromRoman(roman: String): Int
                    else
                     result += arabicNumbers[2]
 
-            'L' -> result += arabicNumbers[3]
+            'L' -> if (i + 1 != lengthRoman)
+                when (roman[i + 1])
+                {
+                    'L', 'D', 'M' -> return -1
+
+                    else -> result += arabicNumbers[3]
+                }
 
             'C' -> if (i + 1 != lengthRoman)
                     when(roman[i + 1])
