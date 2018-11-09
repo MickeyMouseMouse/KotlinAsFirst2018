@@ -175,20 +175,20 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
 
     for (element in stockPrices)
     {
-        if (element.first in result)
-        {
-            result[element.first] = result[element.first] !!+ element.second
+        if (element.first in number)
             number[element.first] = number[element.first] !!+ 1
-        }
         else
-        {
-            result[element.first] = element.second
             number[element.first] = 1
-        }
     }
 
-    for ((name) in result)
-        result[name] = result[name] !!/ number[name]!!
+    for (element in stockPrices)
+    {
+        if (element.first in result)
+            result[element.first] = result[element.first] !!+
+                    element.second / number[element.first]!!.toInt()
+        else
+            result[element.first] = element.second / number[element.first]!!.toInt()
+    }
 
     return result        
 }
