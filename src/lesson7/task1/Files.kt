@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import java.lang.StringBuilder
 
 /**
  * Пример
@@ -54,7 +55,26 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int>
+{
+    val file = File(inputName).bufferedReader()
+
+    val lines = file.readLines().toMutableList()
+    file.close()
+    for (i in 0 until lines.size)
+        lines[i] = lines[i].toUpperCase()
+
+    val result = mutableMapOf<String, Int>()
+    for (str in substrings)
+        result[str] = 0
+
+    for ((str) in result)
+        for (i in 0 until lines.size)
+            result[str] = result[str] !!+
+                 Regex(str.toUpperCase()).findAll(lines[i]).toList().size
+
+    return result
+}
 
 
 /**
@@ -70,8 +90,42 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  * Исключения (жюри, брошюра, парашют) в рамках данного задания обрабатывать не нужно
  *
  */
-fun sibilants(inputName: String, outputName: String) {
-    TODO()
+fun sibilants(inputName: String, outputName: String)
+{
+    val fileInput = File(inputName).bufferedReader()
+    val lines = fileInput.readLines().toMutableList()
+    fileInput.close()
+
+    for (i in 0 until lines.size)
+    {
+        val line = StringBuilder(lines[i])
+        for (j in 0 until line.length - 1)
+            when (line[j])
+            {
+                'Ж', 'ж', 'Ш', 'ш', 'Ч', 'ч', 'Щ', 'щ' ->
+                {
+                    if (line[j + 1] == 'Ы') line[j + 1] = 'И'
+                    if (line[j + 1] == 'ы') line[j + 1] = 'и'
+
+                    if (line[j + 1] == 'Ю') line[j + 1] = 'У'
+                    if (line[j + 1] == 'ю') line[j + 1] = 'у'
+
+                    if (line[j + 1] == 'Я') line[j + 1] = 'А'
+                    if (line[j + 1] == 'я') line[j + 1] = 'а'
+                }
+            }
+
+        lines[i] = line.toString()
+    }
+
+    val fileOutput = File(outputName).bufferedWriter()
+    for (i in 0 until lines.size)
+    {
+        fileOutput.write(lines[i])
+        fileOutput.newLine()
+    }
+
+    fileOutput.close()
 }
 
 /**
@@ -144,7 +198,38 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int>
+{
+    val fileInput = File(inputName).bufferedReader()
+    val lines = fileInput.readLines().toMutableList()
+    fileInput.close()
+
+    for (i in 0 until lines.size)
+        lines[i] = " " + lines[i].toLowerCase() + " "
+
+    val result = mutableMapOf<String, Int>()
+    for (line in lines)
+    {
+        val wordsWithRepetition = Regex("""[a-zа-яё]+""").
+                findAll(line).map{it.value}.toList()
+
+        val words = wordsWithRepetition.toSet().toList()
+
+        for (wordI in words)
+        {
+            var tmp = 0
+            for (wordJ in wordsWithRepetition)
+                if (wordI == wordJ) tmp++
+
+            if (wordI in result)
+                result[wordI] = result[wordI] !!+ tmp
+            else
+                result[wordI] = tmp
+        }
+    }
+
+    return result.toList().sortedBy{-it.second}.take(20).toMap()
+}
 
 /**
  * Средняя
@@ -209,8 +294,31 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  *
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
-fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+fun allCharsIsDifferent(str : String) =
+        str.toUpperCase().toSet().size == str.length
+
+fun chooseLongestChaoticWord(inputName: String, outputName: String)
+{
+    val fileInput = File(inputName).bufferedReader()
+    val lines = fileInput.readLines().toList()
+    fileInput.close()
+
+    var maxLength = 0
+    for (i in 0 until lines.size)
+        if (allCharsIsDifferent(lines[i]) && maxLength < lines[i].length)
+            maxLength = lines[i].length
+
+    val result = StringBuilder("")
+    for (i in 0 until lines.size)
+        if (allCharsIsDifferent(lines[i]) && maxLength == lines[i].length)
+        {
+            if (result.isNotEmpty()) result.append(", ")
+            result.append(lines[i])
+        }
+
+    val fileOutput = File(outputName).bufferedWriter()
+    fileOutput.write(result.toString())
+    fileOutput.close()
 }
 
 /**
