@@ -183,6 +183,8 @@ fun flattenPhoneNumber(phone: String): String
             phone[i] != '(' && phone[i] != ')') result.append(phone[i])
     }
 
+    if (Regex("[0-9]").findAll(result).toList().size == 0) return ""
+
     return result.toString()
 }
 
