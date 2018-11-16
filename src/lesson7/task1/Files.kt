@@ -292,17 +292,31 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
         val str = StringBuilder("")
         for (j in 0 until lines[i].length)
         {
-            var tmp = StringBuilder(lines[i][j].toString())
-            if (lines[i][j].toLowerCase() in dictionary)
-                tmp = StringBuilder(dictionary[lines[i][j].toLowerCase()]!!.toLowerCase())
+            var ch = lines[i][j].toString()
+            if (ch in "A".."Z" || ch in "a".."z" ||
+                ch in "А".."Я" || ch in "а".."я" ||
+                ch == "Ё" || ch == "ё")
+            {
+                if (lines[i][j].toLowerCase() in dictionary)
+                    ch = dictionary[lines[i][j].toLowerCase()]!!.toLowerCase()
 
-            if (lines[i][j].toUpperCase() in dictionary)
-                tmp = StringBuilder(dictionary[lines[i][j].toUpperCase()]!!.toLowerCase())
+                if (lines[i][j].toUpperCase() in dictionary)
+                    ch = dictionary[lines[i][j].toUpperCase()]!!.toLowerCase()
 
-            if (lines[i][j] == lines[i][j].toUpperCase())
-                tmp[0] = tmp[0].toUpperCase()
+                if (lines[i][j] == lines[i][j].toUpperCase())
+                {
+                    val tmp = StringBuilder(ch)
+                    tmp[0] = tmp[0].toUpperCase()
+                    ch = tmp.toString()
+                }
+            }
+            else
+            {
+                if (lines[i][j] in dictionary)
+                    ch = dictionary[lines[i][j].toLowerCase()]!!.toLowerCase()
+            }
 
-            str.append(tmp)
+            str.append(ch)
         }
 
         result.add(str)
