@@ -63,15 +63,29 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     file.close()
     for (i in 0 until lines.size)
         lines[i] = lines[i].toUpperCase()
+    val line = lines.joinToString()
 
     val result = mutableMapOf<String, Int>()
-    for (str in substrings)
-        result[str] = 0
+    val substrings = substrings.toMutableList()
 
-    for ((str) in result)
-        for (i in 0 until lines.size)
-            result[str] = result[str] !!+
-                 Regex(str.toUpperCase()).findAll(lines[i]).toList().size
+    var startIndex = 0
+    var sum = 0
+    while (substrings.isNotEmpty())
+    {
+        val find = Regex(substrings[0].toUpperCase()).find(line, startIndex)
+
+        if (find != null)
+            {
+                sum++
+                startIndex = find.range.first + 1
+                continue
+            }
+
+        result[substrings[0]] = sum
+        sum = 0
+        startIndex = 0
+        substrings.removeAt(0)
+    }
 
     return result
 }
@@ -266,8 +280,41 @@ fun top20Words(inputName: String): Map<String, Int>
  *
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
-fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String)
+{
+    val fileInput = File(inputName).bufferedReader()
+    val lines = fileInput.readLines().toMutableList()
+    fileInput.close()
+
+    val result = mutableListOf<StringBuilder>()
+    for (i in 0 until lines.size)
+    {
+        val str = StringBuilder("")
+        for (j in 0 until lines[i].length)
+        {
+            var tmp = StringBuilder(lines[i][j].toString())
+            if (lines[i][j].toLowerCase() in dictionary)
+                tmp = StringBuilder(dictionary[lines[i][j].toLowerCase()]!!.toLowerCase())
+
+            if (lines[i][j].toUpperCase() in dictionary)
+                tmp = StringBuilder(dictionary[lines[i][j].toUpperCase()]!!.toLowerCase())
+
+            if (lines[i][j] == lines[i][j].toUpperCase())
+                tmp[0] = tmp[0].toUpperCase()
+
+            str.append(tmp)
+        }
+
+        result.add(str)
+    }
+
+    val fileOutput = File(outputName).bufferedWriter()
+    for (i in 0 until result.size)
+    {
+        fileOutput.write(result[i].toString())
+        fileOutput.newLine()
+    }
+    fileOutput.close()
 }
 
 /**
