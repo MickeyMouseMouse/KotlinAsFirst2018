@@ -283,51 +283,41 @@ fun top20Words(inputName: String): Map<String, Int>
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String)
 {
     val fileInput = File(inputName).bufferedReader()
-    val lines = fileInput.readLines().toMutableList()
-    fileInput.close()
+    val fileOutput = File(outputName).bufferedWriter()
 
-    val result = mutableListOf<StringBuilder>()
-    for (i in 0 until lines.size)
+    var ch = fileInput.read()
+    while (ch != -1)
     {
-        val str = StringBuilder("")
-        for (j in 0 until lines[i].length)
-        {
-            var ch = lines[i][j].toString()
-            if (ch in "A".."Z" || ch in "a".."z" ||
-                    ch in "А".."Я" || ch in "а".."я" ||
-                    ch == "Ё" || ch == "ё")
+        val char = ch.toChar()
+        var str = char.toString()
+        if (char in 'A'..'Z' || char in 'a'..'z' ||
+            char in 'А'..'Я' || char in 'а'..'я' ||
+            char == 'Ё' || char == 'ё')
             {
-                if (lines[i][j].toLowerCase() in dictionary)
-                    ch = dictionary[lines[i][j].toLowerCase()]!!.toLowerCase()
+                if (char.toLowerCase() in dictionary)
+                    str = dictionary[char.toLowerCase()]!!.toLowerCase()
 
-                if (lines[i][j].toUpperCase() in dictionary)
-                    ch = dictionary[lines[i][j].toUpperCase()]!!.toLowerCase()
+                if (char.toUpperCase() in dictionary)
+                    str = dictionary[char.toUpperCase()]!!.toLowerCase()
 
-                if (ch != "" && lines[i][j] == lines[i][j].toUpperCase())
+                if (str != "" && char == char.toUpperCase())
                 {
-                    val tmp = StringBuilder(ch)
+                    val tmp = StringBuilder(str)
                     tmp[0] = tmp[0].toUpperCase()
-                    ch = tmp.toString()
+                    str = tmp.toString()
                 }
             }
             else
             {
-                if (lines[i][j] in dictionary)
-                    ch = dictionary[lines[i][j].toLowerCase()]!!.toLowerCase()
+                if (char in dictionary)
+                    str = dictionary[char.toLowerCase()]!!.toLowerCase()
             }
 
-            str.append(ch)
-        }
-
-        result.add(str)
+        fileOutput.write(str)
+        ch = fileInput.read()
     }
 
-    val fileOutput = File(outputName).bufferedWriter()
-    for (i in 0 until result.size)
-    {
-        fileOutput.write(result[i].toString())
-        fileOutput.newLine()
-    }
+    fileInput.close()
     fileOutput.close()
 }
 /**

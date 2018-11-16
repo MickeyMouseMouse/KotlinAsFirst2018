@@ -312,9 +312,8 @@ fun bestHighJump(jumps: String): Int
 
 fun plusMinus(expression: String): Int
 {
-    if (expression.length == 0) throw IllegalArgumentException("")
-
     val str = deleteWasteSpace(expression)
+    if (str.length == 0) throw IllegalArgumentException("")
     val input = str.split(" ")
     if (input.size % 2 == 0) throw IllegalArgumentException("")
 
