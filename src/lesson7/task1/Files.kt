@@ -294,8 +294,8 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
         {
             var ch = lines[i][j].toString()
             if (ch in "A".."Z" || ch in "a".."z" ||
-                ch in "А".."Я" || ch in "а".."я" ||
-                ch == "Ё" || ch == "ё")
+                    ch in "А".."Я" || ch in "а".."я" ||
+                    ch == "Ё" || ch == "ё")
             {
                 if (lines[i][j].toLowerCase() in dictionary)
                     ch = dictionary[lines[i][j].toLowerCase()]!!.toLowerCase()
@@ -330,7 +330,6 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     }
     fileOutput.close()
 }
-
 /**
  * Средняя
  *
