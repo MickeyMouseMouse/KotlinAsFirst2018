@@ -303,7 +303,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                 if (lines[i][j].toUpperCase() in dictionary)
                     ch = dictionary[lines[i][j].toUpperCase()]!!.toLowerCase()
 
-                if (lines[i][j] == lines[i][j].toUpperCase())
+                if (ch != "" && lines[i][j] == lines[i][j].toUpperCase())
                 {
                     val tmp = StringBuilder(ch)
                     tmp[0] = tmp[0].toUpperCase()
