@@ -40,7 +40,7 @@ data class Square(val column: Int, val row: Int) {
  */
 fun square(notation: String): Square
 {
-    if (notation.length == 0 ||
+    if (notation.length != 2 ||
         notation[0] !in 'a'..'h' || notation[1] !in '1'..'8')
             throw IllegalArgumentException()
 
@@ -152,8 +152,8 @@ fun color (square : Square) : Boolean
 
 fun bishopMoveNumber(start: Square, end: Square): Int
 {
-    if (start.equals(end)) return 0
     if (!start.inside() || !end.inside()) throw IllegalArgumentException()
+    if (start.equals(end)) return 0
 
     val colorStart = color(start)
     val colorEnd = color(end)
