@@ -66,13 +66,13 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     val line = lines.joinToString()
 
     val result = mutableMapOf<String, Int>()
-    val substrings = substrings.toMutableList()
+    val sub = substrings.toMutableList()
 
     var startIndex = 0
     var sum = 0
-    while (substrings.isNotEmpty())
+    while (sub.isNotEmpty())
     {
-        val find = Regex(substrings[0].toUpperCase()).find(line, startIndex)
+        val find = Regex(sub[0].toUpperCase()).find(line, startIndex)
 
         if (find != null)
             {
@@ -81,10 +81,10 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
                 continue
             }
 
-        result[substrings[0]] = sum
+        result[sub[0]] = sum
         sum = 0
         startIndex = 0
-        substrings.removeAt(0)
+        sub.removeAt(0)
     }
 
     return result
@@ -107,38 +107,25 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 fun sibilants(inputName: String, outputName: String)
 {
     val fileInput = File(inputName).bufferedReader()
-    val lines = fileInput.readLines().toMutableList()
-    fileInput.close()
-
-    for (i in 0 until lines.size)
-    {
-        val line = StringBuilder(lines[i])
-        for (j in 0 until line.length - 1)
-            when (line[j])
-            {
-                'Ж', 'ж', 'Ш', 'ш', 'Ч', 'ч', 'Щ', 'щ' ->
-                {
-                    if (line[j + 1] == 'Ы') line[j + 1] = 'И'
-                    if (line[j + 1] == 'ы') line[j + 1] = 'и'
-
-                    if (line[j + 1] == 'Ю') line[j + 1] = 'У'
-                    if (line[j + 1] == 'ю') line[j + 1] = 'у'
-
-                    if (line[j + 1] == 'Я') line[j + 1] = 'А'
-                    if (line[j + 1] == 'я') line[j + 1] = 'а'
-                }
-            }
-
-        lines[i] = line.toString()
-    }
-
     val fileOutput = File(outputName).bufferedWriter()
-    for (i in 0 until lines.size)
+
+    val letters = listOf('Ж', 'ж', 'Ш', 'ш', 'Ч', 'ч', 'Щ', 'щ')
+    val replacements = mapOf('Ы' to 'И', 'ы' to 'и', 'Ю' to 'У', 'ю' to 'у', 'Я' to 'А', 'я' to 'а')
+
+    var ch = fileInput.read()
+    var previous = ' '
+    while (ch != -1)
     {
-        fileOutput.write(lines[i])
-        fileOutput.newLine()
+        var char = ch.toChar()
+        if (previous in letters && char in replacements)
+                char = replacements[char]!!.toChar()
+
+        fileOutput.write(char.toInt())
+        previous = char
+        ch = fileInput.read()
     }
 
+    fileInput.close()
     fileOutput.close()
 }
 
@@ -290,9 +277,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     {
         val char = ch.toChar()
         var str = char.toString()
-        if (char in 'A'..'Z' || char in 'a'..'z' ||
-            char in 'А'..'Я' || char in 'а'..'я' ||
-            char == 'Ё' || char == 'ё')
+        if (Regex("""[A-zА-яёЁ]+""").matches(char.toString()))
             {
                 if (char.toLowerCase() in dictionary)
                     str = dictionary[char.toLowerCase()]!!.toLowerCase()
@@ -300,7 +285,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                 if (char.toUpperCase() in dictionary)
                     str = dictionary[char.toUpperCase()]!!.toLowerCase()
 
-                if (str != "" && char == char.toUpperCase())
+                if (str != "" && char.isUpperCase())
                 {
                     val tmp = StringBuilder(str)
                     tmp[0] = tmp[0].toUpperCase()
@@ -344,30 +329,18 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  *
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
-fun allCharsIsDifferent(str : String) =
-        str.toUpperCase().toSet().size == str.length
-
 fun chooseLongestChaoticWord(inputName: String, outputName: String)
 {
-    val fileInput = File(inputName).bufferedReader()
-    val lines = fileInput.readLines().toList()
-    fileInput.close()
+    val input = File(inputName)
+            .readLines()
+            .filter {it.toLowerCase().toList().size == it.toLowerCase().toList().toSet().size}
+            .groupBy {it.length}
 
-    var maxLength = 0
-    for (i in 0 until lines.size)
-        if (allCharsIsDifferent(lines[i]) && maxLength < lines[i].length)
-            maxLength = lines[i].length
-
-    val result = StringBuilder("")
-    for (i in 0 until lines.size)
-        if (allCharsIsDifferent(lines[i]) && maxLength == lines[i].length)
-        {
-            if (result.isNotEmpty()) result.append(", ")
-            result.append(lines[i])
-        }
+    var result = input[input.keys.max()].toString()
+    result = result.substring(1, result.length - 1)
 
     val fileOutput = File(outputName).bufferedWriter()
-    fileOutput.write(result.toString())
+    fileOutput.write(result)
     fileOutput.close()
 }
 
