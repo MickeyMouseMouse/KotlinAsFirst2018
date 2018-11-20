@@ -159,33 +159,14 @@ fun dateDigitToStr(digital: String): String
  * "+79211234567" или "123456789" для приведённых примеров.
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
+ * (\+?\d*\(\d+\)\d+)
  */
 fun flattenPhoneNumber(phone: String): String
 {
-    if (Regex("[/+]").findAll(phone).toList().size !in 0..1) return ""
-
-    val numberOpeningBrackets = Regex("[(]").findAll(phone).toList().size
-    val numberClosingBrackets = Regex("[)]").findAll(phone).toList().size
-    if (numberOpeningBrackets == 1)
-    {
-        if (numberClosingBrackets != 1) return ""
-    }
+    if (Regex("""^\+([0-9]|-| |\([0-9]+\))+|([0-9]|-| |\([0-9]+\))+""").matches(phone))
+        return Regex("""-| |\(|\)""").replace(phone, "")
     else
-        if (numberClosingBrackets != 0 || numberOpeningBrackets != 0) return ""
-
-    val result = StringBuilder("")
-    for (i in 0 until phone.length)
-    {
-        if (phone[i] !in setOf(' ', '+', '-', '(', ')') &&
-                phone[i] !in '0'..'9') return ""
-
-        if (phone[i] != ' ' && phone[i] != '-' &&
-            phone[i] != '(' && phone[i] != ')') result.append(phone[i])
-    }
-
-    if (Regex("[0-9]").findAll(result).toList().size == 0) return ""
-
-    return result.toString()
+        return ""
 }
 
 /**
@@ -200,37 +181,10 @@ fun flattenPhoneNumber(phone: String): String
  */
 fun bestLongJump(jumps: String): Int
 {
-    if (jumps.length == 0) return -1
+    if (!jumps.matches(Regex("""(\d+( (-|%|))+)+\d+""")))
+        return -1
 
-    val tmpStr = StringBuilder("")
-    var index = 0
-    while (index < jumps.length)
-    {
-        tmpStr.append(jumps[index])
-
-        if (jumps[index] == ' ')
-            while(jumps[index] == ' ')
-                index++
-        else
-            index++
-    }
-
-    val input = tmpStr.split(" ")
-
-    var max : Int = -1
-    for (i in 0 until input.size)
-        if (input[i][0] !in setOf('%', '-'))
-        {
-            val tmpNumber = input[i].toIntOrNull()
-            if (tmpNumber != null)
-            {
-                if (tmpNumber > max) max = tmpNumber
-            }
-            else
-                return -1
-        }
-
-    return max
+    return jumps.split(" ").filter{it != "-" && it != "%"}.max()!!.toInt()
 }
 
 /**
@@ -274,30 +228,19 @@ fun deleteWasteSpace(str : String) : StringBuilder
 
 fun bestHighJump(jumps: String): Int
 {
-    val permissibleSymbols = setOf('+', '%', '-')
+    if (!jumps.matches(Regex("""(\d+ +[\\+\\%-\\s]+| )+""")))
+        return -1
 
-    val splitting = deleteWasteSpace(jumps).toString().split(" ")
-    val size = splitting.size
-    if (size % 2 != 0) return -1
+    var jumps = Regex("""[\\%-]""").replace(jumps, "")
+    jumps = Regex("""\s+""").replace(jumps, " ")
+    val list = jumps.split(" ")
 
-    var result = -1
-    for (i in 0 until size step 2)
-    {
-        val high = splitting[i].toIntOrNull()
+    var max = -1
+    for (i in 1 until list.size)
+        if (list[i] == "+" && list[i - 1].toInt() > max)
+            max = list[i - 1].toInt()
 
-        if (high == null)
-            return -1
-        else
-        {
-            for (j in 0 until splitting[i + 1].length)
-                if (splitting[i + 1][j] !in permissibleSymbols) return -1
-
-            if ('+' in splitting[i + 1] && result < high)
-                result = high
-        }
-    }
-
-    return result
+    return max
 }
 
 /**
