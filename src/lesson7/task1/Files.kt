@@ -57,13 +57,11 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int>
 {
-    val file = File(inputName).bufferedReader()
-
-    val lines = file.readLines().toMutableList()
-    file.close()
-    for (i in 0 until lines.size)
-        lines[i] = lines[i].toUpperCase()
-    val line = lines.joinToString()
+    val str = File(inputName)
+            .readLines()
+            .toMutableList()
+            .map{it.toUpperCase()}
+            .joinToString()
 
     val result = mutableMapOf<String, Int>()
     val sub = substrings.toMutableList()
@@ -72,7 +70,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     var sum = 0
     while (sub.isNotEmpty())
     {
-        val find = Regex(sub[0].toUpperCase()).find(line, startIndex)
+        val find = Regex(sub[0].toUpperCase()).find(str, startIndex)
 
         if (find != null)
             {
@@ -201,12 +199,10 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  */
 fun top20Words(inputName: String): Map<String, Int>
 {
-    val fileInput = File(inputName).bufferedReader()
-    val lines = fileInput.readLines().toMutableList()
-    fileInput.close()
-
-    for (i in 0 until lines.size)
-        lines[i] = " " + lines[i].toLowerCase() + " "
+    val lines = File(inputName)
+            .readLines()
+            .toMutableList()
+            .map{" " + it.toLowerCase() + " "}
 
     val result = mutableMapOf<String, Int>()
     for (line in lines)
@@ -333,7 +329,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String)
 {
     val input = File(inputName)
             .readLines()
-            .filter {it.toLowerCase().toList().size == it.toLowerCase().toList().toSet().size}
+            .filter {it.toLowerCase().toSet().size == it.length}
             .groupBy {it.length}
 
     var result = input[input.keys.max()].toString()

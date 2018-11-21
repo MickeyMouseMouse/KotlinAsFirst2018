@@ -181,10 +181,17 @@ fun flattenPhoneNumber(phone: String): String
  */
 fun bestLongJump(jumps: String): Int
 {
-    if (!jumps.matches(Regex("""(\d+( (-|%|))+)+\d+""")))
+    if (!jumps.matches(Regex("""[\d\s-%]+""")))
         return -1
 
-    return jumps.split(" ").filter{it != "-" && it != "%"}.max()!!.toInt()
+    val max = jumps.split(" ").max()
+    if (max == null)
+        return -1
+    else
+        if (max.matches(Regex("""[\d]+""")))
+            return max.toInt()
+
+    return -1
 }
 
 /**
@@ -197,43 +204,14 @@ fun bestLongJump(jumps: String): Int
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun deleteWasteSpace(str : String) : StringBuilder
-{
-    val result = StringBuilder("")
-    if (str == "" || str == " ") return result
-
-    var index = 0
-    if (str[0] == ' ') index++
-    while (index < str.length)
-    {
-        if (str[index] != ' ')
-        {
-            result.append(str[index])
-            index++
-        }
-        else
-        {
-            result.append(' ')
-            while (str[index] == ' ')
-            {
-                index++
-
-                if (index == str.length) break
-            }
-        }
-    }
-
-    return result
-}
-
 fun bestHighJump(jumps: String): Int
 {
-    if (!jumps.matches(Regex("""(\d+ +[\\+\\%-\\s]+| )+""")))
+    if (!jumps.matches(Regex("""[\d\s-%+]+""")))
         return -1
 
-    var jumps = Regex("""[\\%-]""").replace(jumps, "")
-    jumps = Regex("""\s+""").replace(jumps, " ")
-    val list = jumps.split(" ")
+    var str = Regex("""[\\%-]""").replace(jumps, "")
+    str = Regex("""\s+""").replace(str, " ")
+    val list = str.split(" ")
 
     var max = -1
     for (i in 1 until list.size)
@@ -255,35 +233,32 @@ fun bestHighJump(jumps: String): Int
 
 fun plusMinus(expression: String): Int
 {
-    val str = deleteWasteSpace(expression)
+    val str = expression.replace(Regex("\\s+"), " ")
     if (str.length == 0) throw IllegalArgumentException("")
     val input = str.split(" ")
     if (input.size % 2 == 0) throw IllegalArgumentException("")
 
+    var result = 0
+    var sign = true // true = +; false = -
     for (i in 0 until input.size)
         if (i % 2 == 0)
         {
             for (j in 0 until input[i].length)
                 if (input[i][j].toInt() - '0'.toInt() !in 0..9)
                     throw IllegalArgumentException("")
+
+            if (sign)
+                result += input[i].toInt()
+            else
+                result -= input[i].toInt()
         }
         else
+        {
             if (input[i] != "+" && input[i] != "-")
                 throw IllegalArgumentException("")
 
-    var result = 0
-    var sign = true // true = +; false = -
-
-    for (i in 0 until input.size step 2)
-    {
-        if (sign)
-            result += input[i].toInt()
-        else
-            result -= input[i].toInt()
-
-        if (i != input.size - 1)
-            sign = (input[i + 1] == "+")
-    }
+            sign = (input[i] == "+")
+        }
 
     return result
 }
@@ -326,21 +301,22 @@ fun mostExpensive(description: String): String
 {
     if (description == "") return ""
 
-    val description = deleteWasteSpace(description)
-    var index = 0
-    while (index < description.length)
-    {
-        if (description[index] == ';') description.deleteCharAt(index + 1)
-        index++
-    }
-
     val input = description.split(";")
 
     var max = -1.0
     var result = ""
     for (i in 0 until input.size)
     {
-        val tmp = input[i].split(" ")
+        val tmp = input[i].split(" ").toMutableList()
+
+        var j = 0
+        while (j < tmp.size)
+        {
+            if (tmp[j] == "")
+                tmp.removeAt(j)
+            j++
+        }
+
         if (tmp.size != 2) return ""
 
         val cost = tmp[1].toDoubleOrNull()
