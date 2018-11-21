@@ -332,8 +332,12 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String)
             .filter {it.toLowerCase().toSet().size == it.length}
             .groupBy {it.length}
 
-    var result = input[input.keys.max()].toString()
-    result = result.substring(1, result.length - 1)
+    var result = ""
+    if (input.isNotEmpty())
+    {
+        result = input[input.keys.max()].toString()
+        result = result.substring(1, result.length - 1)
+    }
 
     val fileOutput = File(outputName).bufferedWriter()
     fileOutput.write(result)
