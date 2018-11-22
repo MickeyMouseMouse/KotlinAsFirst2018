@@ -201,6 +201,7 @@ fun top20Words(inputName: String): Map<String, Int>
             .readText()
             .toLowerCase()
             .replace(Regex("""[^a-zа-яё ]"""), " ")
+            .replace(Regex("""^\s+|\s+$"""), "")
             .replace(Regex("""\s+"""), " ")
             .split(" ")
 
