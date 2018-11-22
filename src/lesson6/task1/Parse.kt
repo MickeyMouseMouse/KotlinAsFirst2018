@@ -184,14 +184,15 @@ fun bestLongJump(jumps: String): Int
     if (!jumps.matches(Regex("""[\d\s-%]+""")))
         return -1
 
-    val max = jumps.split(" ").max()
-    if (max == null)
-        return -1
-    else
-        if (max.matches(Regex("""[\d]+""")))
-            return max.toInt()
+    val list = jumps.split(" ").map{it.toIntOrNull()}
 
-    return -1
+    var max = -1
+    for (value in list)
+        if (value != null)
+            if (value > max)
+                max = value
+
+    return max
 }
 
 /**
@@ -221,6 +222,21 @@ fun bestHighJump(jumps: String): Int
     return max
 }
 
+/*
+fun bestHighJump(jumps: String): Int =
+    try
+    {
+        jumps.split(" ")
+            .zipWithNext()
+            .filterIndexed {index, el -> index % 2 == 0 && el.second.contains("+")}
+            .map {it.first.toInt()}.max()!!
+    } catch (e: Exception)
+    {
+        -1
+    }
+
+*/
+
 /**
  * Сложная
  *
@@ -233,34 +249,24 @@ fun bestHighJump(jumps: String): Int
 
 fun plusMinus(expression: String): Int
 {
-    if (!expression.matches(Regex("""[\d\\+\-\s]+""")))
+    val str = expression.replace(Regex("\\s+"), " ")
+    if (!str.matches(Regex("""[+-]?\d+(\s[+-]\s\d+)*""")))
         throw IllegalArgumentException("")
 
-    val str = expression.replace(Regex("\\s+"), " ")
     val input = str.split(" ")
-    if (input.size % 2 == 0) throw IllegalArgumentException("")
+    if (input.size == 1 && !input[0].matches(Regex("""\d+""")))
+        throw IllegalArgumentException("")
 
     var result = 0
     var sign = true // true = +; false = -
     for (i in 0 until input.size)
         if (i % 2 == 0)
-        {
-            for (j in 0 until input[i].length)
-                if (input[i][j].toInt() - '0'.toInt() !in 0..9)
-                    throw IllegalArgumentException("")
-
             if (sign)
                 result += input[i].toInt()
             else
                 result -= input[i].toInt()
-        }
         else
-        {
-            if (input[i] != "+" && input[i] != "-")
-                throw IllegalArgumentException("")
-
             sign = (input[i] == "+")
-        }
 
     return result
 }
@@ -309,20 +315,11 @@ fun mostExpensive(description: String): String
     var result = ""
     for (i in 0 until input.size)
     {
-        val tmp = input[i].split(" ").toMutableList()
-
-        var j = 0
-        while (j < tmp.size)
-        {
-            if (tmp[j] == "")
-                tmp.removeAt(j)
-            j++
-        }
+        val tmp = input[i].split(" ").filter{it != ""}
 
         if (tmp.size != 2) return ""
 
-        val cost = tmp[1].toDoubleOrNull()
-        if (cost == null) return ""
+        val cost = tmp[1].toDoubleOrNull() ?: return ""
 
         if (cost > max)
         {
@@ -347,118 +344,23 @@ fun mostExpensive(description: String): String
  */
 fun fromRoman(roman: String): Int
 {
-    val arabicNumbers = listOf(1, 5, 10, 50, 100, 500, 1000)
-    val arabicNumbersOther = listOf(4, 9, 40, 90, 400, 900)
-    val lengthRoman = roman.length
-
-    if (lengthRoman == 0) return -1
-    for (i in 0 until lengthRoman)
-        if (roman[i] !in setOf('I', 'V', 'X', 'L', 'C', 'D', 'M')) return -1
-
-    for (i in 0 until lengthRoman - 4)
-    {
-        if (roman[i] == 'M') continue
-
-        if (roman[i] == roman[i + 1] &&
-            roman[i] == roman[i + 2] &&
-            roman[i] == roman[i + 3]) return -1
-    }
+    val romanToArab = hashMapOf('M' to 1000, 'D' to 500, 'C' to 100, 'L' to 50,
+                           'X' to 10, 'V' to 5, 'I' to 1)
+    val arab = roman.map {romanToArab[it] ?: return -1}
 
     var result = 0
     var i = 0
-    while (i < lengthRoman)
+    while (i < arab.size)
     {
-        when (roman[i])
-        {
-            'I' -> if (i + 1 != lengthRoman)
-                    when (roman[i + 1])
-                    {
-                        'L', 'C', 'D', 'M' -> return -1
+        if (i < arab.size - 1)
+            if (arab[i] < arab[i + 1])
+            {
+                result += arab[i + 1] - arab[i]
+                i += 2
+                continue
+            }
 
-                        'V' ->
-                        {
-                            result += arabicNumbersOther[0]
-                            i++
-                        }
-
-                        'X' ->
-                        {
-                            result += arabicNumbersOther[1]
-                            i++
-                        }
-
-                        else -> result += arabicNumbers[0]
-                    }
-                   else
-                    result += arabicNumbers[0]
-
-            'V' -> if (i + 1 != lengthRoman)
-                       when (roman[i + 1])
-                       {
-                           'V', 'L', 'C', 'D', 'M' -> return -1
-
-                           else -> result += arabicNumbers[1]
-                       }
-                   else
-                    result += arabicNumbers[1]
-
-            'X' -> if (i + 1 != lengthRoman)
-                    when (roman[i + 1])
-                    {
-                        'D', 'M' -> return -1
-
-                        'L' ->
-                        {
-                            result += arabicNumbersOther[2]
-                            i++
-                        }
-
-                        'C' ->
-                        {
-                            result += arabicNumbersOther[3]
-                            i++
-                        }
-
-                        else -> result += arabicNumbers[2]
-                    }
-                   else
-                    result += arabicNumbers[2]
-
-            'L' -> if (i + 1 != lengthRoman)
-                    when (roman[i + 1])
-                    {
-                        'L', 'D', 'M' -> return -1
-
-                        else -> result += arabicNumbers[3]
-                    }
-                   else
-                    result += arabicNumbers[3]
-
-            'C' -> if (i + 1 != lengthRoman)
-                    when(roman[i + 1])
-                    {
-                        'D' ->
-                        {
-                            result += arabicNumbersOther[4]
-                            i++
-                        }
-
-                        'M' ->
-                        {
-                            result += arabicNumbersOther[5]
-                            i++
-                        }
-
-                        else -> result += arabicNumbers[4]
-                    }
-                   else
-                    result += arabicNumbers[4]
-
-            'D' -> result += arabicNumbers[5]
-
-            'M' -> result += arabicNumbers[6]
-        }
-
+        result += arab[i]
         i++
     }
 

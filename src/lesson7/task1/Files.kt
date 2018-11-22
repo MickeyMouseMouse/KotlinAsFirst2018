@@ -59,9 +59,9 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 {
     val str = File(inputName)
             .readLines()
-            .toMutableList()
-            .map{it.toUpperCase()}
             .joinToString()
+            .toUpperCase()
+
 
     val result = mutableMapOf<String, Int>()
     val sub = substrings.toMutableList()
