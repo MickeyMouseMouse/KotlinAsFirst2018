@@ -344,6 +344,19 @@ fun mostExpensive(description: String): String
  */
 fun fromRoman(roman: String): Int
 {
+    // проверки на корректность римского числа
+    if (roman == "") return -1
+    if (Regex("""IL|IC|ID|IM|VV|VL|VC|VD|VM|XD|XM|LL|LD|LM""")
+        .findAll(roman).toList().size != 0) return -1
+    for (i in 0 until roman.length - 4)
+    {
+        if (roman[i] == 'M') continue
+
+        if (roman[i] == roman[i + 1] &&
+                roman[i] == roman[i + 2] &&
+                roman[i] == roman[i + 3]) return -1
+    }
+
     val romanToArab = hashMapOf('M' to 1000, 'D' to 500, 'C' to 100, 'L' to 50,
                            'X' to 10, 'V' to 5, 'I' to 1)
     val arab = roman.map {romanToArab[it] ?: return -1}
