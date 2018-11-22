@@ -58,10 +58,8 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int>
 {
     val str = File(inputName)
-            .readLines()
-            .joinToString()
+            .readText()
             .toUpperCase()
-
 
     val result = mutableMapOf<String, Int>()
     val sub = substrings.toMutableList()
@@ -199,33 +197,23 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  */
 fun top20Words(inputName: String): Map<String, Int>
 {
-    val lines = File(inputName)
-            .readLines()
-            .toMutableList()
-            .map{" " + it.toLowerCase() + " "}
+    val result = File(inputName)
+            .readText()
+            .toLowerCase()
+            .replace(Regex("""[^a-zа-яё ]"""), " ")
+            .replace(Regex("""\s+"""), " ")
+            .split(" ")
 
-    val result = mutableMapOf<String, Int>()
-    for (line in lines)
-    {
-        val wordsWithRepetition = Regex("""[a-zа-яё]+""").
-                findAll(line).map{it.value}.toList()
-
-        val words = wordsWithRepetition.toSet().toList()
-
-        for (wordI in words)
-        {
-            var tmp = 0
-            for (wordJ in wordsWithRepetition)
-                if (wordI == wordJ) tmp++
-
-            if (wordI in result)
-                result[wordI] = result[wordI] !!+ tmp
-            else
-                result[wordI] = tmp
-        }
-    }
-
-    return result.toList().sortedBy{-it.second}.take(20).toMap()
+    if (result.size == 1 && result[0] == "")
+        return mapOf()
+    else
+        return result
+            .groupBy{it}
+            .mapValues{it.value.size}
+            .toList()
+            .sortedBy{-it.second}
+            .take(20)
+            .toMap()
 }
 
 /**
