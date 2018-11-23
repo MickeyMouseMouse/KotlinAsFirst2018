@@ -184,15 +184,10 @@ fun bestLongJump(jumps: String): Int
     if (!jumps.matches(Regex("""[\d\s-%]+""")))
         return -1
 
-    val list = jumps.split(" ").map{it.toIntOrNull()}
-
-    var max = -1
-    for (value in list)
-        if (value != null)
-            if (value > max)
-                max = value
-
-    return max
+    return jumps.split(" ")
+            .map{it.toIntOrNull()}
+            .filterNotNull()
+            .max() ?: -1
 }
 
 /**
@@ -250,7 +245,7 @@ fun bestHighJump(jumps: String): Int =
 fun plusMinus(expression: String): Int
 {
     val str = expression.replace(Regex("\\s+"), " ")
-    if (!str.matches(Regex("""[+-]?\d+(\s[+-]\s\d+)*""")))
+    if (!str.matches(Regex("""\d+(\s[+-]\s\d+)*""")))
         throw IllegalArgumentException("")
 
     val input = str.split(" ")

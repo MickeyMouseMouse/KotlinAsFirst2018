@@ -254,42 +254,33 @@ fun top20Words(inputName: String): Map<String, Int>
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String)
 {
-    val fileInput = File(inputName).bufferedReader()
-    val fileOutput = File(outputName).bufferedWriter()
+    val extendedDictionary =
+        (
+            dictionary
+                .map{it.key.toLowerCase() to it.value.toLowerCase()} +
+            dictionary
+                .map{it.key.toUpperCase() to it.value.toLowerCase().capitalize()}
+                .filter{it.first != it.first.toLowerCase()}
+        ).toMap()
+
+    val fileInput = File(inputName).reader()
+    val fileOutput = File(outputName).writer()
 
     var ch = fileInput.read()
     while (ch != -1)
     {
-        val char = ch.toChar()
-        var str = char.toString()
-        if (Regex("""[A-zА-яёЁ]+""").matches(char.toString()))
-            {
-                if (char.toLowerCase() in dictionary)
-                    str = dictionary[char.toLowerCase()]!!.toLowerCase()
+        if (ch.toChar() in extendedDictionary)
+            fileOutput.write(extendedDictionary[ch.toChar()])
+        else
+            fileOutput.write(ch)
 
-                if (char.toUpperCase() in dictionary)
-                    str = dictionary[char.toUpperCase()]!!.toLowerCase()
-
-                if (str != "" && char.isUpperCase())
-                {
-                    val tmp = StringBuilder(str)
-                    tmp[0] = tmp[0].toUpperCase()
-                    str = tmp.toString()
-                }
-            }
-            else
-            {
-                if (char in dictionary)
-                    str = dictionary[char.toLowerCase()]!!.toLowerCase()
-            }
-
-        fileOutput.write(str)
         ch = fileInput.read()
     }
 
     fileInput.close()
     fileOutput.close()
 }
+
 /**
  * Средняя
  *
