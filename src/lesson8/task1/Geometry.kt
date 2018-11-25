@@ -196,7 +196,10 @@ fun lineBySegment(s: Segment): Line
     if (s.begin.x != s.end.x)
         return Line(s.begin, atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x)))
     else
-        return Line(s.begin, PI / 2)
+        if (s.begin.y != s.end.y)
+            return Line(s.begin, PI / 2)
+        else
+            return Line(s.begin, Double.NaN)
 }
 
 /**
