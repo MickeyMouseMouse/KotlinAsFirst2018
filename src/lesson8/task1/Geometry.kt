@@ -73,13 +73,12 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double
-    {
-        if (center.distance(other.center) > radius + other.radius)
-            return center.distance(other.center) - radius - other.radius
-        else
-            return 0.0
-    }
+    fun distance(other: Circle): Double =
+            if (center.distance(other.center) > radius + other.radius)
+                center.distance(other.center) - radius - other.radius
+            else
+                0.0
+
 
     /**
      * Тривиальная
@@ -185,12 +184,19 @@ class Line private constructor(val b: Double, val angle: Double) {
  */
 fun lineBySegment(s: Segment): Line
 {
+    /*
     if (s.begin.y == s.end.y)
         return Line(s.begin, 0.0)
 
     var angle = atan(abs(s.end.y - s.begin.y) / abs(s.end.x - s.begin.x))
     if (s.end.x < s.begin.x) angle = PI - angle
     return Line(s.begin, angle)
+    */
+
+    if (s.begin.x != s.end.x)
+        return Line(s.begin, atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x)))
+    else
+        return Line(s.begin, PI / 2)
 }
 
 /**

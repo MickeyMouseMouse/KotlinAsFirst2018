@@ -22,13 +22,11 @@ data class Square(val column: Int, val row: Int) {
      * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
      * Для клетки не в пределах доски вернуть пустую строку
      */
-    fun notation(): String
-    {
+    fun notation() =
         if (column in 1..8 && row in 1..8)
-            return('a'.toInt() + column - 1).toChar() + row.toString()
+            ('a'.toInt() + column - 1).toChar() + row.toString()
         else
-            return ""
-    }
+            ""
 }
 
 /**
@@ -41,11 +39,11 @@ data class Square(val column: Int, val row: Int) {
 fun square(notation: String): Square
 {
     if (notation.length != 2 ||
-        notation[0] !in 'a'..'h' || notation[1] !in '1'..'8')
+        notation[0] !in 'a'..'h' ||
+        notation[1] !in '1'..'8')
             throw IllegalArgumentException()
 
-    return Square(notation[0].toInt() - 'a'.toInt() + 1,
-            notation[1].toInt() - '1'.toInt() + 1)
+    return Square(notation[0] - 'a' + 1, notation[1] - '1' + 1)
 }
 
 /**
@@ -155,10 +153,7 @@ fun bishopMoveNumber(start: Square, end: Square): Int
     if (!start.inside() || !end.inside()) throw IllegalArgumentException()
     if (start.equals(end)) return 0
 
-    val colorStart = color(start)
-    val colorEnd = color(end)
-    if (colorStart != colorEnd) return -1
-
+    if (color(start) != color(end)) return -1
 
     if (abs(start.column - end.column) == abs(start.row - end.row))
         return 1
