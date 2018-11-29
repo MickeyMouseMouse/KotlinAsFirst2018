@@ -204,11 +204,10 @@ fun setOfMoves(square: Square): Set<Square>
 
 fun bishopTrajectory(start: Square, end: Square): List<Square>
 {
-    val result = mutableListOf(Square(start.column, start.row))
-    if (start.equals(end))
-        return result
-
     if (color(start) != color(end)) return listOf()
+
+    if (start.equals(end))
+        return listOf(Square(start.column, start.row))
 
     if (abs(start.column - end.column) != abs(start.row - end.row))
     {
@@ -218,15 +217,11 @@ fun bishopTrajectory(start: Square, end: Square): List<Square>
         for (i in setStart)
             for (j in setEnd)
                 if (i == j)
-                {
-                    result.add(i)
-                    result.add(Square(end.column, end.row))
-                    return result
-                }
+                    return listOf(Square(start.column, start.row), i,
+                                  Square(end.column, end.row))
     }
 
-    result.add(Square(end.column, end.row))
-    return result
+    return listOf(Square(start.column, start.row), Square(end.column, end.row))
 }
 
 /**
