@@ -24,7 +24,7 @@ data class Square(val column: Int, val row: Int) {
      */
     fun notation() =
         if (column in 1..8 && row in 1..8)
-            ('a'.toInt() + column - 1).toChar() + row.toString()
+            'a' + column - 1 + "$row"
         else
             ""
 }
@@ -43,7 +43,7 @@ fun square(notation: String): Square
         notation[1] !in '1'..'8')
             throw IllegalArgumentException()
 
-    return Square(notation[0] - 'a' + 1, notation[1] - '1' + 1)
+    return Square(notation[0] - 'a' + 1, notation[1] - '0')
 }
 
 /**
@@ -135,22 +135,7 @@ enum class Colors
     white, black
 }
 
-fun Square.getColor(): Colors
-{
-    when (column)
-    {
-        1, 3, 5, 7 -> when (row)
-        {
-            1, 3, 5, 7 -> return Colors.black
-            else -> return Colors.white
-        }
-        else -> when (row)
-        {
-            1, 3, 5, 7 -> return Colors.white
-            else -> return Colors.black
-        }
-    }
-}
+fun Square.getColor() = if (column % 2 == row % 2) Colors.black else Colors.white
 
 fun bishopMoveNumber(start: Square, end: Square): Int
 {
