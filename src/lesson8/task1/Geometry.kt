@@ -206,16 +206,10 @@ fun bisectorByPoints(a: Point, b: Point): Line
 {
     val center = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
 
-    if (a.x == b.x)
-        return Line(center, 0.0)
-    if (a.y == b.y)
-        return Line(center, PI / 2)
+    var angleLine = (lineBySegment(Segment(a, b)).angle + PI / 2) % PI
+    if (angleLine < 0) angleLine = (angleLine + PI) % PI
 
-    val angleLine = lineBySegment(Segment(a, b)).angle
-    if (angleLine < PI / 2)
-        return Line(center, angleLine + PI / 2)
-    else
-        return Line(center, angleLine - PI / 2)
+    return Line(center, angleLine)
 }
 
 /**

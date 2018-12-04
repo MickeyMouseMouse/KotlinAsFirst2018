@@ -130,20 +130,24 @@ fun rookTrajectory(start: Square, end: Square): List<Square>
  * Примеры: bishopMoveNumber(Square(3, 1), Square(6, 3)) = -1; bishopMoveNumber(Square(3, 1), Square(3, 7)) = 2.
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
-fun color (square : Square) : Boolean
+enum class Colors
 {
-    //false = black; true = white
-    when (square.column)
+    white, black
+}
+
+fun Square.getColor(): Colors
+{
+    when (column)
     {
-        1, 3, 5, 7 -> when (square.row)
+        1, 3, 5, 7 -> when (row)
         {
-            1, 3, 5, 7 -> return false
-            else -> return true
+            1, 3, 5, 7 -> return Colors.black
+            else -> return Colors.white
         }
-        else -> when (square.row)
+        else -> when (row)
         {
-            1, 3, 5, 7 -> return true
-            else -> return false
+            1, 3, 5, 7 -> return Colors.white
+            else -> return Colors.black
         }
     }
 }
@@ -153,7 +157,7 @@ fun bishopMoveNumber(start: Square, end: Square): Int
     if (!start.inside() || !end.inside()) throw IllegalArgumentException()
     if (start.equals(end)) return 0
 
-    if (color(start) != color(end)) return -1
+    if (start.getColor() != end.getColor()) return -1
 
     if (abs(start.column - end.column) == abs(start.row - end.row))
         return 1
@@ -204,7 +208,7 @@ fun setOfMoves(square: Square): Set<Square>
 
 fun bishopTrajectory(start: Square, end: Square): List<Square>
 {
-    if (color(start) != color(end)) return listOf()
+    if (start.getColor() != end.getColor()) return listOf()
 
     if (start.equals(end))
         return listOf(Square(start.column, start.row))
