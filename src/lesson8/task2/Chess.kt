@@ -132,17 +132,18 @@ fun rookTrajectory(start: Square, end: Square): List<Square>
  */
 enum class Colors
 {
-    white, black
+    WHITE, BLACK
 }
 
-fun Square.getColor() = if (column % 2 == row % 2) Colors.black else Colors.white
+val Square.color
+    get() = if (column % 2 == row % 2) Colors.BLACK else Colors.WHITE
 
 fun bishopMoveNumber(start: Square, end: Square): Int
 {
     if (!start.inside() || !end.inside()) throw IllegalArgumentException()
     if (start.equals(end)) return 0
 
-    if (start.getColor() != end.getColor()) return -1
+    if (start.color != end.color) return -1
 
     if (abs(start.column - end.column) == abs(start.row - end.row))
         return 1
@@ -193,7 +194,7 @@ fun setOfMoves(square: Square): Set<Square>
 
 fun bishopTrajectory(start: Square, end: Square): List<Square>
 {
-    if (start.getColor() != end.getColor()) return listOf()
+    if (start.color != end.color) return listOf()
 
     if (start.equals(end))
         return listOf(Square(start.column, start.row))
