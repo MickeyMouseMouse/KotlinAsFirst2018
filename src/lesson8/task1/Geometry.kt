@@ -108,6 +108,14 @@ data class Segment(val begin: Point, val end: Point) {
  */
 fun diameter(vararg points: Point): Segment
 {
+    val result = points
+            .flatMap {from -> points.map { to -> Segment(from, to) }}
+            .sortedBy {-it.begin.distance(it.end)}
+
+
+    return Segment(result[0].begin, result[0].end)
+
+    /*
     if (points.size < 2) throw IllegalArgumentException()
 
     var p1 = Point(0.0, 0.0)
@@ -127,6 +135,7 @@ fun diameter(vararg points: Point): Segment
         }
 
     return Segment(p1, p2)
+    */
 }
 
 /**
