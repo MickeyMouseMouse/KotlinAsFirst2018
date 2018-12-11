@@ -59,7 +59,81 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSpiral(height: Int, width: Int): Matrix<Int>
+{
+    val result = createMatrix(height, width, 0)
+
+    var num = 1
+    val maxNum = height * width + 1
+
+    var i = 0
+    var j = 0
+
+    var direction = 1 // 1 - right, 2 - down, 3 - left, 4 - up
+    var lap = 0
+    while (num != maxNum)
+    {
+        when(direction)
+        {
+            1 ->
+            {
+                for (z in j until width - lap)
+                {
+                    result.set(i, z, num)
+                    num++
+                }
+
+                direction++
+                i++
+                j = width - lap - 1
+            }
+
+            2 ->
+            {
+                for (z in i until height - lap)
+                {
+                    result.set(z, j, num)
+                    num++
+                }
+
+                direction++
+                i = height - lap - 1
+                j--
+            }
+
+            3 ->
+            {
+                while (j >= lap)
+                {
+                    result.set(i, j, num)
+                    num++
+                    j--
+                }
+
+                direction++
+                i--
+                j = lap
+            }
+
+            4 ->
+            {
+                lap++
+                while (i >= lap)
+                {
+                    result.set(i, j, num)
+                    num++
+                    i--
+                }
+
+                direction = 1
+                i = lap
+                j++
+            }
+        }
+    }
+
+    return result
+}
 
 /**
  * Сложная
@@ -75,7 +149,76 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
  *  1  2  2  2  2  1
  *  1  1  1  1  1  1
  */
-fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateRectangles(height: Int, width: Int): Matrix<Int>
+{
+    val result = createMatrix(height, width, 0)
+
+    var num = 1
+
+    var i = 0
+    var j = 0
+
+    var direction = 1 // 1 - right, 2 - down, 3 - left, 4 - up
+    var lap = 0
+    while (true)
+    {
+        when(direction)
+        {
+            1 ->
+            {
+                for (z in j until width - lap)
+                    result.set(i, z, num)
+
+                direction++
+                i++
+                j = width - lap - 1
+            }
+
+            2 ->
+            {
+                for (z in i until height - lap)
+                    result.set(z, j, num)
+
+                direction++
+                i = height - lap - 1
+                j--
+            }
+
+            3 ->
+            {
+                while (j >= lap)
+                {
+                    result.set(i, j, num)
+                    j--
+                }
+
+                direction++
+                i--
+                j = lap
+            }
+
+            4 ->
+            {
+                lap++
+                while (i >= lap)
+                {
+                    result.set(i, j, num)
+                    i--
+                }
+
+                direction = 1
+                i = lap
+                j++
+                num++
+            }
+        }
+
+        if (i !in 0 until height || j !in 0 until width) break
+        if (result.get(i, j) != 0) break
+    }
+
+    return result
+}
 
 /**
  * Сложная
