@@ -233,7 +233,43 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int>
  * 10 13 16 18
  * 14 17 19 20
  */
-fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSnake(height: Int, width: Int): Matrix<Int>
+{
+    val result = createMatrix(height, width, 0)
+
+    var num = 1
+    var iStart = 0
+    var jStart = 0
+    var i = iStart
+    var j = jStart
+    do
+    {
+        while(i in 0 until height &&
+                j in 0 until width)
+        {
+            result.set(i, j, num)
+            num++
+            i++
+            j--
+        }
+
+        if (iStart == 0)
+            if (jStart < width - 1)
+                jStart++
+            else
+                iStart++
+        else
+            if (iStart < height)
+                iStart++
+
+        i = iStart
+        j = jStart
+
+    } while (num != height * width + 1)
+
+    return result
+}
+
 
 /**
  * Средняя
@@ -246,7 +282,18 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
  * 4 5 6      8 5 2
  * 7 8 9      9 6 3
  */
-fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
+fun <E> rotate(matrix: Matrix<E>): Matrix<E>
+{
+    if (matrix.height != matrix.width)
+        throw IllegalArgumentException()
+
+    val result = createMatrix(matrix.height, matrix.width, matrix[0, 0])
+    for(i in 0 until matrix.height)
+        for (j in 0 until matrix.width)
+            result.set(j, matrix.width - 1 - i, matrix.get(i, j))
+
+    return result
+}
 
 /**
  * Сложная
@@ -261,7 +308,35 @@ fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
  * 1 2 3
  * 3 1 2
  */
-fun isLatinSquare(matrix: Matrix<Int>): Boolean = TODO()
+fun isLatinSquare(matrix: Matrix<Int>): Boolean
+{
+    if (matrix.height != matrix.width)
+        return false
+
+    for (i in 0 until matrix.height)
+    {
+        val tmp = mutableSetOf<Int>()
+        for (j in 0 until matrix.width)
+             tmp.add(matrix.get(i, j))
+
+        for (j in 1..matrix.height)
+            if (j !in tmp)
+                return false
+    }
+
+    for (j in 0 until matrix.width)
+    {
+        val tmp = mutableSetOf<Int>()
+        for (i in 0 until matrix.height)
+            tmp.add(matrix.get(i, j))
+
+        for (i in 1..matrix.height)
+            if (i !in tmp)
+                return false
+    }
+
+    return true
+}
 
 /**
  * Средняя
@@ -280,7 +355,43 @@ fun isLatinSquare(matrix: Matrix<Int>): Boolean = TODO()
  *
  * 42 ===> 0
  */
-fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
+fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int>
+{
+    val result = createMatrix(matrix.height, matrix.width, 0)
+
+    for (i in 0 until matrix.height)
+        for (j in 0 until matrix.width)
+        {
+            var sum = 0
+            if (matrix.inMatrix(i - 1, j - 1))
+                sum += matrix.get(i - 1, j - 1)
+
+            if (matrix.inMatrix(i - 1, j))
+                sum += matrix.get(i - 1, j)
+
+            if (matrix.inMatrix(i - 1, j + 1))
+                sum += matrix.get(i - 1, j + 1)
+
+            if (matrix.inMatrix(i, j - 1))
+                sum += matrix.get(i, j - 1)
+
+            if (matrix.inMatrix(i, j + 1))
+                sum += matrix.get(i, j + 1)
+
+            if (matrix.inMatrix(i + 1, j - 1))
+                sum += matrix.get(i + 1, j - 1)
+
+            if (matrix.inMatrix(i + 1, j))
+                sum += matrix.get(i + 1, j)
+
+            if (matrix.inMatrix(i + 1, j + 1))
+                sum += matrix.get(i + 1, j + 1)
+
+            result.set(i, j, sum)
+        }
+
+    return result
+}
 
 /**
  * Средняя
@@ -297,7 +408,44 @@ fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
  * 0 0 1 0
  * 0 0 0 0
  */
-fun findHoles(matrix: Matrix<Int>): Holes = TODO()
+fun findHoles(matrix: Matrix<Int>): Holes
+{
+    val listRows = mutableListOf<Int>()
+    for (i in 0 until matrix.height)
+    {
+        val first = matrix.get(i, 0)
+        if (first != 0) continue
+
+        var fl = true
+        for (j in 1 until matrix.width)
+            if (first != matrix.get(i, j))
+            {
+                fl = false
+                break
+            }
+
+        if (fl) listRows.add(i)
+    }
+
+    val listColumns = mutableListOf<Int>()
+    for (j in 0 until matrix.width)
+    {
+        val first = matrix.get(0, j)
+        if (first != 0) continue
+
+        var fl = true
+        for (i in 1 until matrix.height)
+            if (first != matrix.get(i, j))
+            {
+                fl = false
+                break
+            }
+
+        if (fl) listColumns.add(j)
+    }
+
+    return Holes(listRows, listColumns)
+}
 
 /**
  * Класс для описания местонахождения "дырок" в матрице
