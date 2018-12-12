@@ -355,6 +355,15 @@ fun isLatinSquare(matrix: Matrix<Int>): Boolean
  *
  * 42 ===> 0
  */
+fun <E> inMatrix(matrix: Matrix<E>, row : Int, column: Int): Boolean
+{
+    if (row in 0 until matrix.height &&
+            column in 0 until matrix.width)
+        return true
+    else
+        return false
+}
+
 fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int>
 {
     val result = createMatrix(matrix.height, matrix.width, 0)
@@ -363,28 +372,28 @@ fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int>
         for (j in 0 until matrix.width)
         {
             var sum = 0
-            if (matrix.inMatrix(i - 1, j - 1))
+            if (inMatrix(matrix, i - 1, j - 1))
                 sum += matrix.get(i - 1, j - 1)
 
-            if (matrix.inMatrix(i - 1, j))
+            if (inMatrix(matrix,i - 1, j))
                 sum += matrix.get(i - 1, j)
 
-            if (matrix.inMatrix(i - 1, j + 1))
+            if (inMatrix(matrix,i - 1, j + 1))
                 sum += matrix.get(i - 1, j + 1)
 
-            if (matrix.inMatrix(i, j - 1))
+            if (inMatrix(matrix,i, j - 1))
                 sum += matrix.get(i, j - 1)
 
-            if (matrix.inMatrix(i, j + 1))
+            if (inMatrix(matrix,i, j + 1))
                 sum += matrix.get(i, j + 1)
 
-            if (matrix.inMatrix(i + 1, j - 1))
+            if (inMatrix(matrix,i + 1, j - 1))
                 sum += matrix.get(i + 1, j - 1)
 
-            if (matrix.inMatrix(i + 1, j))
+            if (inMatrix(matrix,i + 1, j))
                 sum += matrix.get(i + 1, j)
 
-            if (matrix.inMatrix(i + 1, j + 1))
+            if (inMatrix(matrix,i + 1, j + 1))
                 sum += matrix.get(i + 1, j + 1)
 
             result.set(i, j, sum)
