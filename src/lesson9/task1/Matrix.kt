@@ -69,17 +69,30 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
         set(cell.row, cell.column, value)
     }
 
-    override fun equals(other: Any?) : Boolean
+    override fun equals(other: Any?): Boolean
     {
         if (other !is Matrix<*>) return false
 
-        for (row in 0 until height)
-            for (column in 0 until width)
-                if (get(row, column) != other[row, column]) return false
+        for (i in 0 until height)
+            for (j in 0 until width)
+                if (get(i, j) != other[i, j]) return false
 
         return true
     }
 
-    override fun toString(): String = TODO()
+    override fun toString(): String
+    {
+        val result = StringBuilder("")
+
+        for (i in 0 until height)
+        {
+            for (j in 0 until width)
+                result.append(get(i, j).toString() + " ")
+
+            result.append("* ")
+        }
+
+        return result.take(result.length - 3).toString()
+    }
 }
 

@@ -475,7 +475,24 @@ data class Holes(val rows: List<Int>, val columns: List<Int>)
  *
  * К примеру, центральный элемент 12 = 1 + 2 + 4 + 5, элемент в левом нижнем углу 12 = 1 + 4 + 7 и так далее.
  */
-fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> = TODO()
+fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int>
+{
+    val result = createMatrix(matrix.height, matrix.width, 0)
+
+    for (i in 0 until matrix.height)
+        for (j in 0 until matrix.width)
+        {
+            var sum = 0
+
+            for (p in 0..i)
+                for (z in 0..j)
+                    sum += matrix.get(p, z)
+
+            result.set(i, j, sum)
+        }
+
+    return result
+}
 
 /**
  * Сложная
@@ -505,7 +522,14 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * Инвертировать заданную матрицу.
  * При инвертировании знак каждого элемента матрицы следует заменить на обратный
  */
-operator fun Matrix<Int>.unaryMinus(): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.unaryMinus(): Matrix<Int>
+{
+    for (i in 0 until height)
+        for (j in 0 until width)
+            this[i, j] *= -1
+
+    return this
+}
 
 /**
  * Средняя
